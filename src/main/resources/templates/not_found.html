@@ -1,24 +1,15 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title></title>
 	<meta name="keywords" content="">
 	<meta name="description" content="">
 	<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
-	<link href="default.css" rel="stylesheet" type="text/css" media="all">
-
+	<link th:href="@{../default.css}" rel="stylesheet">
 </head>
 <body>
-	<div id="header-wrapper">
-		<div id="header" class="container">
-			<div id="logo">
-				<h1><span class="fa fa-bolt"></span><a href="index.html">Turbo LMS</a></h1>
-			</div>
-			<div id="menu">
-			</div>
-		</div>
-	</div>
-
-	<div id="wrapper">
+<header th:replace="fragments/header :: header"></header>
+<div id="wrapper">
 		<div id="featured-wrapper">
 			<p class="error container">Курс не найден, обратитесь к администратору.<p>
 			</div>

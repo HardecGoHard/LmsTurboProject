@@ -1,0 +1,79 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Редактирование курса</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link th:href="@{../default.css}" rel="stylesheet">
+
+</head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<div id="wrapper">
+    <div id="featured-wrapper">
+        <div class="form">
+            <form action="#">
+                <h1 th:text="${course.title}"></h1>
+                <img src="images/no_avatar.png" class="full_avatar">
+                <hr>
+                <input type="file" name="f">
+                <button type="submit" class="formButton">Обновить</button>
+                <hr>
+            </form>
+            <form th:object="${course}" th:method="post" th:action="@{/course}">
+                <input type="hidden" th:field="*{id}">
+                <label for="course-name"><b>Название курса</b></label>
+                <input type="text" th:field="*{title}" id="course-name">
+                <div color = "red">
+                <small class="validation-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Поле названия курса должно быть заполнено</small>
+                </div>
+                <label for="author-course"><b>Автор курса</b></label>
+                <input type="text" th:field="*{author}" id="author-course">
+                <div class="required">
+                <small class="validation-error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Поле автора курса должен быть заполнен</small>
+                </div>
+                <button type="submit" class="formButton">Сохранить</button>
+                <hr>
+            </form>
+            <label><b><a href="createLesson.html">Новый урок</a></b></label>
+            <table class="table-form">
+                <tr>
+                    <th>id</th>
+                    <th>Название</th>
+                    <th>Действие</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Вводный урок</td>
+                    <td>
+                        <button type="submit" class="TableButton">Удалить</button>
+                    </td>
+                </tr>
+            </table>
+
+            <label for=><b>Пользователи связанные с этим курсом</b></label>
+            <table class="table-form">
+                <tr>
+                    <th>id</th>
+                    <th>Имя Пользователя</th>
+                    <th>Действие</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Иванов И.И</td>
+                    <td>
+                        <button type="submit" class="TableButton">Снять с курса</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+</div>
+<div id="copyright" class="container">
+    <p>Turbo LMS.</p>
+</div>
+</body>
+</html>

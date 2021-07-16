@@ -1,0 +1,63 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Поиск курса</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link th:href="@{default.css}" rel="stylesheet">
+
+</head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<div id="wrapper">
+    <div id="featured-wrapper">
+        <div class="form">
+            <h1>Курс</h1>
+            <hr>
+            <form>
+            <label for="titlePrefix" class="inline"><b>поиск по названию курса</b></label>
+            <input type="text" id="titlePrefix" placeholder="Введите Название" class="inline" name="titlePrefix" th:value="${param.titlePrefix}"}>
+            <button type="submit" class="formButton">Найти</button>
+            </form>
+            <hr>
+            <table class="table-form">
+                <tr>
+                    <th>id</th>
+                    <th>Название</th>
+                    <th>Автор</th>
+                    <th>Назначить</th>
+                    <th>Удалить</th>
+                </tr>
+                <tr th:each="course : ${courses}">
+                    <td th:text="${course.id}">1</td>
+                    <td>
+                        <a th:text="${course.title}" th:href="@{/course/{id}(id = ${course.id})}"></a>
+                    </td>
+                    <td th:text="${course.author}"></td>
+                    <form>
+                        <td>
+                            <button type="submit" class="TableButton">Назначить</button>
+                        </td>
+                    </form>
+                    <form th:method="delete" th:action="@{/course/{id}(id = ${course.id})}">
+                        <td>
+                            <button type="submit" class="TableButton">Удалить</button>
+                        </td>
+                    </form>
+                </tr>
+            </table>
+            <div>
+                <a th:href="@{course/new}">Добавить новый курс</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="copyright" class="container">
+    <p>Turbo LMS.</p>
+</div>
+
+
+</body>
+</html>

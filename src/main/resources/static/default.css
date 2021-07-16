@@ -40,8 +40,8 @@ p
 }
 
 textarea{
-	width: 700;
-	height: 200;
+	width: 700px;
+	height: 200px;
 	background: #f1f1f1;
 	resize: none;
 }
@@ -158,7 +158,7 @@ a:hover
 input[type=text], input[type=password], input[type=file], #selectvalue {
   width: 100%;
   padding: 15px;
-  margin: 5px 0 22px 0;
+  margin: 5px 0 12px 0;
   display: inline-block;
   border: none;
   background: #f1f1f1;
@@ -303,7 +303,7 @@ input[type=text]:focus, input[type=password]:focus,#selectvalue {
 	#header-featured
 	{
 		padding: 10em 0em;
-		background-image: url(images/banner.jpg);
+		background-image: url(../images/banner.jpg);
 		background-position: center;
 		background-size: cover;
 	}
@@ -455,12 +455,12 @@ input[type=text]:focus, input[type=password]:focus,#selectvalue {
 	border-radius: 50%;
 }
 #featured-wrapper .mentor{
-	background-image: url(images/mentor.png);
+	background-image: url(../images/mentor.png);
 	background-repeat: no-repeat;
 	background-position: center;
 }
 #featured-wrapper .effect{
-	background-image: url(images/efficiency.png);
+	background-image: url(../images/efficiency.png);
 	background-repeat: no-repeat;
 	background-position: center;
 }
@@ -555,11 +555,10 @@ hr {
 }
 
 
-/* Add a blue text color to links */
+/* Add a orange text color to links */
 a {
-  color: dodgerblue;
+  color: #f2960b;
 }
-
 
 .signin {
   text-align: center;
@@ -572,9 +571,12 @@ a {
 	color: black;
 }
 .full_avatar{
-	width: 200;
-	height: 200;
+	width: 200px;
+	height: 200px;
 	margin: 30px;
+}
+.validation-error{
+	color: darkred;
 }
 
 
