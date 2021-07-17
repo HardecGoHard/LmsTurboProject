@@ -1,8 +1,14 @@
 package com.Turbo.Lms.domain;
 
+import javax.validation.constraints.NotBlank;
+
 public class Course {
     private Long id;
+
+    @NotBlank(message = "Course author has to be filled")
     private String author;
+
+    @NotBlank(message = "Course title has to be filled")
     private String title;
 
     public Course() {

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<header th:fragment="header">
+    <div id="header-wrapper">
+        <div id="header" class="container">
+            <div id="logo">
+                <h1><span class="fa fa-bolt"></span><a href="../index.html">Turbo LMS</a></h1>
+            </div>
+            <div id="menu">
+                <ul>
+                    <li th:classappend="${activePage == 'courses'} ? current_page_item">
+                        <a th:href="@{/course}" accesskey="2">Курсы</a>
+                    </li>
+                    <li th:classappend="${activePage == 'users'} ? current_page_item">
+                        <a th:href="@{/user}" accesskey="2" title="">Пользователь</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+</html>
