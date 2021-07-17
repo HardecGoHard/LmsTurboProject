@@ -17,15 +17,14 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/course")
 public class CourseController {
-    @Autowired
-    private CourseLister courseLister;
-    @Autowired
-    private StatisticsCounter statisticsCounter;
-
+    private final CourseLister courseLister;
+    private final StatisticsCounter statCounter;
     private final CourseService courseService;
 
     @Autowired
-    public CourseController(CourseService courseService) {
+    public CourseController(CourseLister courseLister, StatisticsCounter statCounter, CourseService courseService) {
+        this.courseLister = courseLister;
+        this.statCounter = statCounter;
         this.courseService = courseService;
     }
 
