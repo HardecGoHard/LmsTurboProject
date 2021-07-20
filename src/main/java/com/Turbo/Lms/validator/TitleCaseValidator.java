@@ -13,6 +13,7 @@ public class TitleCaseValidator implements ConstraintValidator<TitleCase, String
     private TitleCase.Language language;
     private static final String REGEX_ENG = "([A-Za-z ,\"']+)";
     private static final String REGEX_RUS = "([А-Яа-я ,\"']+)";
+    private static final List<String> PREPOSITION = Arrays.asList("a", "but", "for", "or", "not", "the", "an");
     @Override
     public void initialize(TitleCase constraintAnnotation) {
         language = constraintAnnotation.language();
@@ -68,9 +69,8 @@ public class TitleCaseValidator implements ConstraintValidator<TitleCase, String
         boolean flag = !isExcessSpace(str) && regexChecker(str, REGEX_ENG) &&
                 caseOfWord(words[0]) && caseOfWord(words[words.length - 1]);
         if (flag) {
-            List<String> preposition = Arrays.asList("a", "but", "for", "or", "not", "the", "an");
             for (int i = 1; i < words.length - 1; i++) {
-                if ((preposition.contains(words[i].toLowerCase()))) {
+                if ((PREPOSITION.contains(words[i].toLowerCase()))) {
                     if (!words[i].toLowerCase().equals(words[i]))
                         return false;
                 } else if (!caseOfWord(words[i]))
