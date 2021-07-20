@@ -13,7 +13,6 @@ public class TitleCaseValidator implements ConstraintValidator<TitleCase, String
     private TitleCase.Language language;
     private static final String REGEX_ENG = "([A-Za-z ,\"']+)";
     private static final String REGEX_RUS = "([А-Яа-я ,\"']+)";
-
     @Override
     public void initialize(TitleCase constraintAnnotation) {
         language = constraintAnnotation.language();
@@ -24,8 +23,7 @@ public class TitleCaseValidator implements ConstraintValidator<TitleCase, String
         boolean flag = false;
         switch (language) {
             case ANY:
-                flag = !isExcessSpace(s) && !isBadSymbols(s)
-                       && (regexChecker(s,REGEX_RUS) || regexChecker(s,REGEX_ENG));
+                flag = !isExcessSpace(s) && (regexChecker(s,REGEX_RUS) || regexChecker(s,REGEX_ENG));
                 break;
             case EN:
                 flag = engTitleValidation(s);
@@ -41,7 +39,7 @@ public class TitleCaseValidator implements ConstraintValidator<TitleCase, String
         this.language = language;
     }
 
-    private boolean isExcessSpace(String str) {
+    private  boolean isExcessSpace(String str) {
         /*
         Если длина строки после удаления лишних пробелов (в начале и конце)
         равна исходной длине строки, то лишних пробелов нет.
@@ -60,18 +58,14 @@ public class TitleCaseValidator implements ConstraintValidator<TitleCase, String
         return Pattern.compile(regex).matcher(str).matches();
     }
 
-    private boolean isBadSymbols(String str) {
-        return str.contains("\n") || str.contains("\t") || str.contains("\r");
-    }
-
-    public boolean rusTitleValidation(String str) {
-        return !isBadSymbols(str) && !isExcessSpace(str) && regexChecker(str, REGEX_RUS)
+    private boolean rusTitleValidation(String str) {
+        return !isExcessSpace(str) && regexChecker(str, REGEX_RUS)
                 && caseOfWord(str);
     }
 
-    public boolean engTitleValidation(String str) {
+    private boolean engTitleValidation(String str) {
         String[] words = str.split(" ");
-        boolean flag = !isBadSymbols(str) && !isExcessSpace(str) && regexChecker(str, REGEX_ENG) &&
+        boolean flag = !isExcessSpace(str) && regexChecker(str, REGEX_ENG) &&
                 caseOfWord(words[0]) && caseOfWord(words[words.length - 1]);
         if (flag) {
             List<String> preposition = Arrays.asList("a", "but", "for", "or", "not", "the", "an");
@@ -87,7 +81,7 @@ public class TitleCaseValidator implements ConstraintValidator<TitleCase, String
         return flag;
     }
 
-    private boolean caseOfWord(String word) {
+    private static boolean caseOfWord(String word) {
         //первая буква может быть заглавной , но остальные НЕ должны писаться заглавными
         return Character.isUpperCase(word.charAt(0)) && word.substring(1).equals(word.substring(1).toLowerCase());
     }
