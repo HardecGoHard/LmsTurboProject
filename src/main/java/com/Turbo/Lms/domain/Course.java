@@ -1,14 +1,17 @@
 package com.Turbo.Lms.domain;
 
+import com.Turbo.Lms.annotations.TitleCase;
+
 import javax.validation.constraints.NotBlank;
 
 public class Course {
     private Long id;
 
-    @NotBlank(message = "Course author has to be filled")
+    @NotBlank(message = "Автор курса должен быть заполнен")
     private String author;
 
-    @NotBlank(message = "Course title has to be filled")
+    @TitleCase
+    @NotBlank(message = "Название курса должно быть заполнено")
     private String title;
 
     public Course() {
