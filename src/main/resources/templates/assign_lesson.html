@@ -1,0 +1,39 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Назначить урок</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link th:href="@{../../default.css}" rel="stylesheet">
+
+</head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+
+<div id="wrapper">
+    <div id="featured-wrapper">
+        <div class="form">
+            <h1>Назначить урок</h1>
+            <hr>
+            <label for="selectvalue"><b>Выберите пользователя</b></label>
+            <form th:method="post" th:action="@{/course/{courseId}/assign (courseId = ${courseId})}">
+            <select id="selectvalue" name="userId" >
+                <option th:each="user : ${users}"
+                        th:value="${user.id}"
+                        th:text="${user.username}"></option>
+            </select>
+            <hr>
+            <button type="submit" class="formButton">Назначить</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+<div id="copyright" class="container">
+    <p>Turbo LMS.</p>
+</div>
+
+
+</body>
+</html>
