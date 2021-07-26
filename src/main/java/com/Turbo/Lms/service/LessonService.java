@@ -2,10 +2,8 @@ package com.Turbo.Lms.service;
 
 import com.Turbo.Lms.Exceptions.NotFoundException;
 import com.Turbo.Lms.dao.LessonRepository;
-import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.domain.Lesson;
 import com.Turbo.Lms.dto.LessonDto;
-import com.Turbo.Lms.util.DTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
