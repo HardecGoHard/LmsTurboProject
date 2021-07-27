@@ -11,9 +11,8 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler
     public ModelAndView notFoundExceptionHandler(NotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView("not_found");
-        modelAndView.addObject("message", ex.getMessageError());
+        modelAndView.addObject("message", ex.getMessage());
         modelAndView.setStatus(HttpStatus.NOT_FOUND);
         return modelAndView;
     }
-
 }

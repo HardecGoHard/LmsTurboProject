@@ -24,7 +24,11 @@ public class CourseService  {
         );
     }
     public CourseDto findByIdAndConvertToDto(Long id){
-       return courseRepository.findByIdAndConvertToDto(id);
+        CourseDto courseDto =  courseRepository.findByIdAndConvertToDto(id);
+        if (courseDto == null) {
+            throw new NotFoundException("Произошла ошибка: курс не найден");
+        }
+       return courseDto;
     }
 
     public void save(Course course) {
