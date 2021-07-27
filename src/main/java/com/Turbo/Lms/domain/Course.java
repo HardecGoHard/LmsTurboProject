@@ -70,25 +70,26 @@ public class Course {
     public void setLessons(List<Lesson> lessons) {
         this.lessons = lessons;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Course course = (Course) o;
-        return Objects.equals(id, course.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
     public Set<User> getUsers() {
         return users;
     }
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return Objects.equals(id, course.id) &&
+                Objects.equals(author, course.author) &&
+                Objects.equals(title, course.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, author, title);
     }
 }
