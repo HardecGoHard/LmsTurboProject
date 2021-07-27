@@ -25,30 +25,39 @@
                 <input type="hidden" th:field="*{id}">
                 <label for="course-name"><b>Название курса</b></label>
                 <input type="text" th:field="*{title}" id="course-name">
-                <div color = "red">
-                <small class="validation-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Поле названия курса должно быть заполнено</small>
+                <div color="red">
+                    <small class="validation-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Поле
+                        названия курса должно быть заполнено</small>
                 </div>
                 <label for="author-course"><b>Автор курса</b></label>
                 <input type="text" th:field="*{author}" id="author-course">
                 <div class="required">
-                <small class="validation-error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Поле автора курса должен быть заполнен</small>
+                    <small class="validation-error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Поле
+                        автора курса должен быть заполнен</small>
                 </div>
                 <button type="submit" class="formButton">Сохранить</button>
                 <hr>
             </form>
-            <label><b><a href="createLesson.html">Новый урок</a></b></label>
+            <form>
+                <label><b><a name="course_id" th:href="@{../lesson/new(course_id = ${course.id})}">Новый
+                    урок</a></b></label>
+            </form>
             <table class="table-form">
                 <tr>
-                    <th>id</th>
-                    <th>Название</th>
-                    <th>Действие</th>
+                    <td>id</td>
+                    <td>Название</td>
+                    <td>Действие</td>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Вводный урок</td>
+                <tr th:each="lesson : ${lessons}">
+                    <td th:text="${lesson.id}"></td>
                     <td>
-                        <button type="submit" class="TableButton">Удалить</button>
+                        <a th:text="${lesson.title}" th:href="@{/lesson/{id}(id = ${lesson.id})}"></a>
                     </td>
+                    <form th:method="delete" th:action="@{/lesson/{id}(id = ${lesson.id})}">
+                        <td>
+                            <button type="submit" class="TableButton">Удалить</button>
+                        </td>
+                    </form>
                 </tr>
             </table>
 
@@ -59,11 +68,15 @@
                     <th>Имя Пользователя</th>
                     <th>Действие</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Иванов И.И</td>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
                     <td>
-                        <button type="submit" class="TableButton">Снять с курса</button>
+                        <form th:method="delete" th:action="@{/course/{courseId}/unsign (courseId = ${course.id})}">
+                            <button name="userId" th:value="${user.id}" type="submit" class="TableButton">Снять с
+                                курса
+                            </button>
+                        </form>
                     </td>
                 </tr>
             </table>

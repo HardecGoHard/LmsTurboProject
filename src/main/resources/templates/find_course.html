@@ -16,9 +16,10 @@
             <h1>Курс</h1>
             <hr>
             <form>
-            <label for="titlePrefix" class="inline"><b>поиск по названию курса</b></label>
-            <input type="text" id="titlePrefix" placeholder="Введите Название" class="inline" name="titlePrefix" th:value="${param.titlePrefix}"}>
-            <button type="submit" class="formButton">Найти</button>
+                <label for="titlePrefix" class="inline"><b>поиск по названию курса</b></label>
+                <input type="text" id="titlePrefix" placeholder="Введите Название" class="inline" name="titlePrefix"
+                       th:value="${param.titlePrefix}" }>
+                <button type="submit" class="formButton">Найти</button>
             </form>
             <hr>
             <table class="table-form">
@@ -29,15 +30,16 @@
                     <th>Назначить</th>
                     <th>Удалить</th>
                 </tr>
-                <tr th:each="course : ${courses}">
+                <tr th:unless="${courses.empty}" th:each="course : ${courses}">
+
                     <td th:text="${course.id}">1</td>
                     <td>
                         <a th:text="${course.title}" th:href="@{/course/{id}(id = ${course.id})}"></a>
                     </td>
                     <td th:text="${course.author}"></td>
-                    <form>
+                    <form th:method="get" th:action="@{/course/{id}/assign (id = ${course.id})}">
                         <td>
-                            <button type="submit" class="TableButton">Назначить</button>
+                                <button type="submit" class="TableButton">Назначить</button>
                         </td>
                     </form>
                     <form th:method="delete" th:action="@{/course/{id}(id = ${course.id})}">
@@ -45,6 +47,9 @@
                             <button type="submit" class="TableButton">Удалить</button>
                         </td>
                     </form>
+                </tr>
+                <tr th:if="${courses.empty}">
+                    <td colspan="4">No data</td>
                 </tr>
             </table>
             <div>

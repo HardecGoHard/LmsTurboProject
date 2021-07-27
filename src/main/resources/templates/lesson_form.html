@@ -1,0 +1,46 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Создать урок</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link th:href="@{../default.css}" rel="stylesheet">
+
+</head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+
+<div id="wrapper">
+    <div id="featured-wrapper">
+        <h1>Урок</h1>
+        <hr>
+        <div class="form">
+
+
+            <form th:object="${lesson}" th:method="post" th:action="@{/lesson}">
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{courseId}">
+
+                <label for="title"><b>Создание урока</b></label>
+                <input type="text" id="title" th:field="*{title}" required>
+                <small class="validation-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title
+                    shouldn't be empty</small>
+
+                <label for="text">Описание урока</label>
+                <textarea id="text" rows="20" cols="30" th:field="*{text}" required></textarea>
+                <small class="validation-error" th:if="${#fields.hasErrors('text')}" th:errors="*{text}">Text shouldn't
+                    be empty</small>
+
+                <button type="submit" class="formButton">Сохранить</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="copyright" class="container">
+    <p>Turbo LMS.</p>
+</div>
+
+
+</body>
+</html>

@@ -11,7 +11,7 @@
 <header th:replace="fragments/header :: header"></header>
 <div id="wrapper">
 		<div id="featured-wrapper">
-			<p class="error container">Курс не найден, обратитесь к администратору.<p>
+			<p class="error container" th:text="${message}" >Курс не найден, обратитесь к администратору.<p>
 			</div>
 		</div>
 		<div id="copyright" class="container">

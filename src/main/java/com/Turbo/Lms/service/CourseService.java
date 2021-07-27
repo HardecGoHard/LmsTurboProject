@@ -1,15 +1,16 @@
 package com.Turbo.Lms.service;
 
+import com.Turbo.Lms.Exceptions.NotFoundException;
 import com.Turbo.Lms.dao.CourseRepository;
 import com.Turbo.Lms.domain.Course;
+import com.Turbo.Lms.dto.CourseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class CourseService {
+public class CourseService  {
     private CourseRepository courseRepository;
 
     @Autowired
@@ -17,24 +18,29 @@ public class CourseService {
         this.courseRepository = courseRepository;
     }
 
-    public List<Course> findAll() {
-        return courseRepository.findAll();
+    public Course findById(long id) {
+        return courseRepository.findById(id).orElseThrow(
+                ()->new NotFoundException("Произошла ошибка: курс не найден ")
+        );
     }
-
-    public Optional<Course> findById(long id) {
-        return courseRepository.findById(id);
+    public CourseDto findByIdAndConvertToDto(Long id){
+        CourseDto courseDto =  courseRepository.findByIdAndConvertToDto(id);
+        if (courseDto == null) {
+            throw new NotFoundException("Произошла ошибка: курс не найден");
+        }
+       return courseDto;
     }
 
     public void save(Course course) {
         courseRepository.save(course);
     }
-
-    public void delete(long id) {
-        courseRepository.delete(id);
+    public void delete(Course course) {
+        courseRepository.delete(course);
     }
 
-    public List<Course> findByTitleWithPrefix(String prefix) {
-        return courseRepository.findByTitleWithPrefix(prefix);
+    public List<Course> findByTitleLike(String prefix) {
+        return courseRepository.findByTitleLike(prefix);
     }
+
 }
 
