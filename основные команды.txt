@@ -12,3 +12,9 @@ SELECT password FROM users WHERE id = ?
 SELECT * FROM courses
 WHERE course_id IN
     ( SELECT course_id FROM users_courses_static WHERE user_id = ? );
+
+//поиск курсов, у которых рейтинг от и до какого-то значения
+SELECT * FROM courses WHERE course_id >= ? AND course_id <= ? ORDER BY rating DESC;
+
+//поиск курсов по автору
+SELECT * FROM courses WHERE author = ?;
