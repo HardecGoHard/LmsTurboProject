@@ -31,7 +31,7 @@ public class LessonController {
     @PostMapping
     public String lessonSubmit(@Valid LessonDto lessonDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            return"lesson_form";
+            return "lesson_form";
         }
         lessonService.save(lessonDto);
         return "redirect:/course/"+lessonDto.getCourseId();

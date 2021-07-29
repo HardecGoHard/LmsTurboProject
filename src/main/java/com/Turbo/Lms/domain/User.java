@@ -18,6 +18,9 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private Set<Course> courses;
 
+    @ManyToMany()
+    private Set<Role> roles;
+
     public User() {
     }
 

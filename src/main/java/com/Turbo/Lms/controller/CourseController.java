@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -27,7 +28,7 @@ public class CourseController {
     }
 
     @GetMapping
-    public String courseTable(Model model, @RequestParam(name = "titlePrefix", required = false) String titlePrefix) {
+    public String courseTable(Model model, @RequestParam(name = "titlePrefix", required = false) String titlePrefix, HttpSession session) {
         model.addAttribute("activePage", "courses");
         model.addAttribute("courses", courseService.findByTitleLike(titlePrefix == null ? "%" : titlePrefix + "%"));
         return "find_course";
