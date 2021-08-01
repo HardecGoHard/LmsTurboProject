@@ -20,14 +20,12 @@ public class UserService {
     private final CourseService courseService;
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-    private final RoleRepositorty roleRepositorty;
 
     @Autowired
     public UserService(UserRepository userRepository, CourseService courseService, PasswordEncoder encoder, RoleRepositorty roleRepositorty) {
         this.userRepository = userRepository;
         this.courseService = courseService;
         this.encoder = encoder;
-        this.roleRepositorty = roleRepositorty;
     }
 
     public List<UserDto> findAll() {
@@ -78,11 +76,6 @@ public class UserService {
         return list.stream().map(u -> new UserDto(
                 u.getId(),
                 u.getUsername(), u.getPassword(), u.getRoles())).collect(Collectors.toList());
-    }
-
-    @ModelAttribute("roles")
-    public List<Role> rolesAttribute() {
-        return roleRepositorty.findAll();
     }
 
     private void signUser(Long id, Long courseId, boolean isDelete) {

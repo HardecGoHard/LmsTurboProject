@@ -13,7 +13,10 @@
                     <li th:classappend="${activePage == 'courses'} ? current_page_item">
                         <a th:href="@{/course}" accesskey="2">Курсы</a>
                     </li>
-                    <li th:classappend="${activePage == 'users'} ? current_page_item" sec:authorize="isAuthenticated()">
+                    <li th:classappend="${activePage == 'users'} ? current_page_item" sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/admin/user}">Пользователи</a>
+                    </li>
+                    <li th:classappend="${activePage == 'profile'} ? current_page_item" sec:authorize="isAuthenticated()">
                         <a sec:authentication="principal.username">username</a>
                     </li>
                     <li sec:authorize="isAuthenticated()" >
