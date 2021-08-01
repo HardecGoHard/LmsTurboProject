@@ -14,10 +14,10 @@
 <div id="wrapper">
     <div id="featured-wrapper">
         <div class="form">
-            <h1>Назначить урок</h1>
+            <h1>Назначить пользователя на курс</h1>
             <hr>
             <label for="selectvalue"><b>Выберите пользователя</b></label>
-            <form th:method="post" th:action="@{/course/{courseId}/assign (courseId = ${courseId})}">
+            <form  th:unless="${users.empty}" th:method="post" th:action="@{/course/{courseId}/assign (courseId = ${courseId})}">
             <select id="selectvalue" name="userId" >
                 <option th:each="user : ${users}"
                         th:value="${user.id}"
@@ -26,6 +26,7 @@
             <hr>
             <button type="submit" class="formButton">Назначить</button>
             </form>
+            <p th:if="${users.empty}">Незарегистрированные на курс пользователи не найдены</p>
         </div>
 
     </div>

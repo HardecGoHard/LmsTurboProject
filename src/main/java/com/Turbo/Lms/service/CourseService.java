@@ -42,5 +42,9 @@ public class CourseService  {
         return courseRepository.findByTitleLike(prefix);
     }
 
+    public List<Course> findCoursesNotAssignToUser(Long userId, String title){
+        return courseRepository.findCoursesByTitleNotAssignToUser(userId, title);
+    }
+
 }
 
