@@ -20,6 +20,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "from Course c where c.id = :id")
     CourseDto findByIdAndConvertToDto(@Param("id") long id);
 
+    //Вывод курсов, на которые пользователь ещё не записался
     @Query("from Course c " +
             "where c.id not in ( " +
             "select c.id " +

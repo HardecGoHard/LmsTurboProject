@@ -9,28 +9,13 @@
 
 </head>
 <body>
-<header>
-	<div id="header-wrapper">
-		<div id="header" class="container">
-			<div id="logo">
-				<h1><span class="fa fa-bolt"></span><a href="index.html">Turbo LMS</a></h1>
-			</div>
-			<div id="menu">
-				<ul>
-					<li class="current_page_item"><a href="index.html" accesskey="1" title="">Домашняя страница</a></li>
-					<li><a href="signIn.html" accesskey="4" title="">Войти</a></li>
-					<li><a href="registration.html" accesskey="5" title="">Регистрация</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</header>
+<header th:replace="fragments/header :: header"></header>
 	<div id="header-featured">
 		<div id="banner-wrapper">
 			<div id="banner" class="container">
 				<h2>Turbo LMS</h2>
 				<h3>Это Turbo LMS, бесплатная платформа обучения, где каждый человек, благодоря множеству курсов, сможет узнать что то новое для себя!</h3>
-				<a href="registration.html" class="button">Начать обучение!</a>
+				<a th:href="@{/course}" class="button">Начать обучение!</a>
 			</div>
 		</div>
 	</div>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
@@ -23,7 +24,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("from User u " +
             "left join u.courses c " +
             "where c.id = :courseId")
-    List<User> getUsersOfCourse(@Param("courseId") long courseId);
+    Set<User> getUsersOfCourse(@Param("courseId") long courseId);
 
     Optional<User> findUserByUsername(String username);
     List<User> findByUsernameLike(String username);

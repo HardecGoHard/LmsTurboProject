@@ -13,4 +13,5 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Query("select new com.Turbo.Lms.dto.LessonDto(l.id, l.title, l.course.id) " +
             "from Lesson l where l.course.id = :id")
     List<LessonDto> findAllForLessonIdWithoutText(@Param("id") long id);
+    List<Lesson> findLessonsByCourse_Id(Long course_id);
 }

@@ -20,6 +20,10 @@ public class SecurityConfiguration {
                 .withUser("student")
                 .password(passwordEncoder.encode("123"))
                 .roles("STUDENT");
+        auth.inMemoryAuthentication()
+                .withUser("admin")
+                .password(passwordEncoder.encode("1234"))
+                .roles("ADMIN");
         auth.userDetailsService(userDetailService);
     }
 
@@ -28,9 +32,11 @@ public class SecurityConfiguration {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests()
+            http.
+                    authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/**").permitAll()
+                    .antMatchers("/").permitAll()
+                    .anyRequest().authenticated()
                     .and()
                     .formLogin()
                     .defaultSuccessUrl("/course")

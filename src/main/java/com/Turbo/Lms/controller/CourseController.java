@@ -14,9 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.security.Principal;
 
 @Controller
 @RequestMapping("/course")
@@ -52,7 +50,7 @@ public class CourseController {
 
     @RequestMapping("/{id}")
     public String courseForm(Model model, @PathVariable("id") Long id) {
-        CourseDto course = courseService.findByIdAndConvertToDto(id);
+        CourseDto course = courseService.findById(id);
         model.addAttribute("course", course);
         model.addAttribute("lessons", lessonService.findAllForLessonIdWithoutText(id));
         model.addAttribute("users", userService.getUsersOfCourse(course.getId()));
@@ -61,7 +59,7 @@ public class CourseController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping
-    public String submitCourseForm(@Valid Course course, BindingResult bindingResult) {
+    public String submitCourseForm(@Valid CourseDto course, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "form_course";
         }
@@ -104,7 +102,7 @@ public class CourseController {
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/{courseId}/unsign")
     public String userDelete(@PathVariable("courseId") Long courseId, @RequestParam("userId") Long userId) {
-        userService.unassignUserById(userId, courseId);
+        userService.unassignUserFromCourseById(userId, courseId);
         return "redirect:/course/" + courseId;
     }
 }

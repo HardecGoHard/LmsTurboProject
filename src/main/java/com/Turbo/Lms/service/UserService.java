@@ -1,37 +1,36 @@
 package com.Turbo.Lms.service;
 
 import com.Turbo.Lms.Exceptions.NotFoundException;
-import com.Turbo.Lms.dao.RoleRepositorty;
+import com.Turbo.Lms.dao.CourseRepository;
 import com.Turbo.Lms.dao.UserRepository;
 import com.Turbo.Lms.domain.Course;
-import com.Turbo.Lms.domain.Role;
 import com.Turbo.Lms.domain.User;
 import com.Turbo.Lms.dto.UserDto;
+import com.Turbo.Lms.util.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    private final CourseService courseService;
+    private final CourseRepository courseRepository;
     private final UserRepository userRepository;
-    private final PasswordEncoder encoder;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, CourseService courseService, PasswordEncoder encoder, RoleRepositorty roleRepositorty) {
+    public UserService(UserRepository userRepository,
+                       CourseRepository courseRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
-        this.courseService = courseService;
-        this.encoder = encoder;
+        this.courseRepository = courseRepository;
+        this.userMapper = userMapper;
     }
 
     public List<UserDto> findAll() {
-        return userRepository.findAll().stream()
-                .map(usr -> new UserDto(usr.getId(), usr.getUsername(), "", usr.getRoles()))
-                .collect(Collectors.toList());
+        return convertListToDto(userRepository.findAll());
     }
 
     public void deleteById(long id) {
@@ -39,16 +38,12 @@ public class UserService {
     }
 
     public void save(UserDto userDto) {
-        userRepository.save(new User(userDto.getId(),
-                userDto.getUsername(),
-                encoder.encode(userDto.getPassword()),
-                        userDto.getRoles()
-        ));
+        userRepository.save(userMapper.toUserFromDto(userDto));
     }
 
     public UserDto findById(long id) {
         return userRepository.findById(id)
-                .map(usr -> new UserDto(usr.getId(), usr.getUsername(), "", usr.getRoles()))
+                .map(usr -> userMapper.toUserDto(usr))
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
@@ -61,26 +56,24 @@ public class UserService {
     }
 
     public List<UserDto> getUsersOfCourse(Long id) {
-        return convertListToDto(userRepository.getUsersOfCourse(id));
+        return convertListToDto(new ArrayList<>(userRepository.getUsersOfCourse(id)));
     }
 
     public void assignUserById(Long id, Long courseId) {
-        signUser(id, courseId, false);
+        signUserToCourse(id, courseId, false);
     }
 
-    public void unassignUserById(Long id, Long courseId) {
-        signUser(id, courseId, true);
+    public void unassignUserFromCourseById(Long id, Long courseId) {
+        signUserToCourse(id, courseId, true);
     }
 
     private List<UserDto> convertListToDto(List<User> list) {
-        return list.stream().map(u -> new UserDto(
-                u.getId(),
-                u.getUsername(), u.getPassword(), u.getRoles())).collect(Collectors.toList());
+        return list.stream().map(u -> userMapper.toUserDto(u)).collect(Collectors.toList());
     }
 
-    private void signUser(Long id, Long courseId, boolean isDelete) {
+    private void signUserToCourse(Long id, Long courseId, boolean isDelete) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        Course course = courseService.findById(courseId);
+        Course course =  courseRepository.findById(courseId).get();
         if (isDelete) {
             user.getCourses().remove(course);
             course.getUsers().remove(user);
@@ -88,11 +81,11 @@ public class UserService {
             course.getUsers().add(user);
             user.getCourses().add(course);
         }
-        courseService.save(course);
+        courseRepository.save(course);
     }
 
     public UserDto findUserByUsername(String remoteUser) {
-        return userRepository.findUserByUsername(remoteUser).map(usr -> new UserDto(usr.getId(), usr.getUsername(), "", usr.getRoles()))
+        return userRepository.findUserByUsername(remoteUser).map(usr -> userMapper.toUserDto(usr))
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 }
