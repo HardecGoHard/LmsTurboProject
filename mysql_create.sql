@@ -68,7 +68,7 @@ CREATE TABLE `topic` (
 	`save_author_id` INT NOT NULL,
 	`delete_author_id` INT NOT NULL,
 	`update_author_id` INT NOT NULL,
-	`content` VARCHAR(255) NOT NULL,
+	`content_id` VARCHAR(255) NOT NULL,
 	PRIMARY KEY (`topic_id`)
 );
 
@@ -77,6 +77,12 @@ CREATE TABLE `tasks` (
 	`topic_id` INT NOT NULL,
 	`any_tasks` VARCHAR(255) NOT NULL,
 	PRIMARY KEY (`task_id`)
+);
+
+CREATE TABLE `content` (
+	`content_id` INT NOT NULL,
+	`content` blob NOT NULL,
+	`type` VARCHAR(255) NOT NULL
 );
 
 ALTER TABLE `Users` ADD CONSTRAINT `Users_fk0` FOREIGN KEY (`password`) REFERENCES ``(``);
@@ -111,9 +117,12 @@ ALTER TABLE `topic` ADD CONSTRAINT `topic_fk2` FOREIGN KEY (`delete_author_id`) 
 
 ALTER TABLE `topic` ADD CONSTRAINT `topic_fk3` FOREIGN KEY (`update_author_id`) REFERENCES `Users`(`user_id`);
 
-ALTER TABLE `topic` ADD CONSTRAINT `topic_fk4` FOREIGN KEY (`content`) REFERENCES ``(``);
+ALTER TABLE `topic` ADD CONSTRAINT `topic_fk4` FOREIGN KEY (`content_id`) REFERENCES ``(``);
 
 ALTER TABLE `tasks` ADD CONSTRAINT `tasks_fk0` FOREIGN KEY (`topic_id`) REFERENCES `topic`(`topic_id`);
+
+ALTER TABLE `content` ADD CONSTRAINT `content_fk0` FOREIGN KEY (`content_id`) REFERENCES `topic`(`content_id`);
+
 
 
 
