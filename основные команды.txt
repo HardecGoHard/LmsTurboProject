@@ -1,0 +1,20 @@
+По-моему, самые популярные команды будут:
+
+//Вывод всех курсов по рейтингу
+SELECT * FROM courses ORDER BY rating DESC ;
+CREATE INDEX idx_courses_rating ON courses USING btree (rating DESC)
+
+//Авторизация пользователя 
+SELECT password FROM users WHERE id = ?
+
+
+//поиск курсов, на которые записан пользователь
+SELECT * FROM courses
+WHERE course_id IN
+    ( SELECT course_id FROM users_courses_static WHERE user_id = ? );
+
+//поиск курсов, у которых рейтинг от и до какого-то значения
+SELECT * FROM courses WHERE course_id >= ? AND course_id <= ? ORDER BY rating DESC;
+
+//поиск курсов по автору
+SELECT * FROM courses WHERE author = ?;
