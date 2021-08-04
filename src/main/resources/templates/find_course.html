@@ -1,4 +1,5 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Поиск курса</title>
@@ -27,8 +28,9 @@
                     <th>id</th>
                     <th>Название</th>
                     <th>Автор</th>
-                    <th>Назначить</th>
-                    <th>Удалить</th>
+                    <th sec:authorize="hasRole('STUDENT')">Изучить</th>
+                    <th sec:authorize="hasRole('ADMIN')">Назначить</th>
+                    <th sec:authorize="hasRole('ADMIN')">Удалить</th>
                 </tr>
                 <tr th:unless="${courses.empty}" th:each="course : ${courses}">
 
@@ -37,23 +39,30 @@
                         <a th:text="${course.title}" th:href="@{/course/{id}(id = ${course.id})}"></a>
                     </td>
                     <td th:text="${course.author}"></td>
-                    <form th:method="get" th:action="@{/course/{id}/assign (id = ${course.id})}">
-                        <td>
-                                <button type="submit" class="TableButton">Назначить</button>
-                        </td>
-                    </form>
-                    <form th:method="delete" th:action="@{/course/{id}(id = ${course.id})}">
-                        <td>
+                    <td sec:authorize="hasRole('STUDENT')">
+                        <form th:method="post" th:action="@{/course/{id}/assign (id = ${course.id})}">
+                            <input type="hidden" name="userId" th:value="${user.id}">
+                            <button type="submit" class="TableButton">Изучить</button>
+                        </form>
+                    </td>
+                    <td sec:authorize="hasRole('ADMIN')">
+                        <form th:method="get" th:action="@{/course/{id}/assign (id = ${course.id})}">
+                            <button type="submit" class="TableButton">Назначить</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:method="delete" sec:authorize="hasRole('ADMIN')"
+                              th:action="@{/course/{id}(id = ${course.id})}">
                             <button type="submit" class="TableButton">Удалить</button>
-                        </td>
-                    </form>
+                        </form>
+                    </td>
                 </tr>
                 <tr th:if="${courses.empty}">
                     <td colspan="4">No data</td>
                 </tr>
             </table>
             <div>
-                <a th:href="@{course/new}">Добавить новый курс</a>
+                <a th:href="@{course/new}" sec:authorize="hasRole('ADMIN')">Добавить новый курс</a>
             </div>
         </div>
 

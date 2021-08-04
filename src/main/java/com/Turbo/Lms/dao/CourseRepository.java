@@ -2,6 +2,7 @@ package com.Turbo.Lms.dao;
 
 import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.domain.Lesson;
+import com.Turbo.Lms.domain.User;
 import com.Turbo.Lms.dto.CourseDto;
 import com.Turbo.Lms.dto.LessonDto;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,13 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("select new com.Turbo.Lms.dto.CourseDto(c.id, c.author, c.title) " +
             "from Course c where c.id = :id")
     CourseDto findByIdAndConvertToDto(@Param("id") long id);
+
+    //Вывод курсов, на которые пользователь ещё не записался
+    @Query("from Course c " +
+            "where c.id not in ( " +
+            "select c.id " +
+            "from Course c " +
+            "left join c.users u " +
+            "where u.id = :userId) and c.title like :title")
+    List<Course> findCoursesByTitleNotAssignToUser(@Param("userId") long userId, @Param("title") String title);
 }

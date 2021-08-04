@@ -18,6 +18,24 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private Set<Course> courses;
 
+    @ManyToMany()
+    private Set<Role> roles;
+
+    public User(Long id, String username, String password, Set<Role> roles) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+    public User(String username, String password, Set<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    @Column
+    private String password;
+
     public User() {
     }
 
@@ -48,6 +66,22 @@ public class User {
 
     public void setCourses(Set<Course> courses) {
         this.courses = courses;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

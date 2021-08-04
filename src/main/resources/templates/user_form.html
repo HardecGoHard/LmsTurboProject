@@ -1,0 +1,61 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Редактирование профиля</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link th:href="@{../../default.css}" rel="stylesheet">
+
+</head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+
+<div id="wrapper">
+    <div id="featured-wrapper">
+            <div class="form">
+                <h1>Редактирование профиля</h1>
+                <img src="../images/no_avatar.png" class="full_avatar">
+                <hr>
+
+                <input type="file" name="f">
+                <button type="submit" class="formButton">Обновить</button>
+                <hr>
+                <form th:object="${user}" th:method="post" th:action="@{/admin/user}">
+                    <input type="hidden" th:field="*{id}">
+
+                    <label for="name"><b>Изменить логин</b></label>
+                    <input type="text" placeholder="Введите логин" th:field="*{username}" name="name" id="name">
+                    <div>
+                        <small class="validation-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+                            логин должен быть заполнен</small>
+                    </div>
+
+                    <label for="password"><b>Пароль</b></label>
+                    <input type="password" placeholder="Введите пароль" id="password" th:field="*{password}">
+                    <div>
+                        <small class="validation-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                            пароль должен быть заполнен и подоходить требованиям</small>
+                    </div>
+
+					<label for="roles">Roles</label>
+					<select multiple class="form-control" id="roles" th:field="*{roles}" required>
+						<option th:each="role : ${roles}"
+								th:text="${role.name}"
+								th:value="${role.id}"
+								th:selected="${user.roles?.contains(role)}"></option>
+					</select>
+
+                    <hr>
+                    <button type="submit" class="formButton">Сохранить</button>
+                </form>
+            </div>
+
+    </div>
+</div>
+<div id="copyright" class="container">
+    <p>Turbo LMS</a>.</p>
+</div>
+
+</body>
+</html>

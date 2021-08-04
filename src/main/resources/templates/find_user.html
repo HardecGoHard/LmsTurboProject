@@ -1,0 +1,61 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Поиск пользователя</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link th:href="@{../../default.css}" rel="stylesheet">
+
+</head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+<div id="wrapper">
+    <div id="featured-wrapper">
+        <div class="form">
+            <h1>Поиск пользователя</h1>
+            <hr>
+            <form>
+                <label for="namePrefix" class="inline"><b>Введите имя</b></label>
+                <input type="text" id="namePrefix" placeholder="Введите имя" class="inline" name="namePrefix"
+                       th:value="${param.namePrefix}" }>
+                <button type="submit" class="formButton">Найти</button>
+            </form>
+            <hr>
+            <table class="table-form">
+                <tr>
+                    <th>id</th>
+                    <th>Имя пользователя</th>
+                    <th>Удалить</th>
+                </tr>
+                <tr th:unless="${users.empty}" th:each="user : ${users}">
+
+                    <td th:text="${user.id}">1</td>
+                    <td>
+                        <a th:text="${user.username}" th:href="@{user/{id}(id = ${user.id})}"></a>
+                    </td>
+                    <form th:method="delete" th:action="@{user/{id}(id = ${user.id})}">
+                        <td>
+                            <button type="submit" class="TableButton">Удалить</button>
+                        </td>
+                    </form>
+                </tr>
+                <tr th:if="${users.empty}">
+                    <td colspan="3">No data</td>
+                </tr>
+            </table>
+            <div>
+                <a th:href="@{/admin/user/new}" >Добавить нового пользователя</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="copyright" class="container">
+    <p>Turbo LMS.</p>
+</div>
+
+
+</body>
+</html>

@@ -1,4 +1,5 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Создать урок</title>
@@ -16,19 +17,22 @@
         <h1>Урок</h1>
         <hr>
         <div class="form">
-
-
-            <form th:object="${lesson}" th:method="post" th:action="@{/lesson}">
+            <label for="title"><h2>Информация об уроке</h2></label>
+            <hr>
+            <div sec:authorize="hasRole('STUDENT')">
+                <h2 th:text="${lesson.title}"></h2>
+                <p th:text="${lesson.text}"></p>
+            </div>
+            <form sec:authorize="hasRole('ADMIN')" th:object="${lesson}" th:method="post" th:action="@{/lesson}">
                 <input type="hidden" th:field="*{id}">
                 <input type="hidden" th:field="*{courseId}">
 
-                <label for="title"><b>Создание урока</b></label>
-                <input type="text" id="title" th:field="*{title}" required>
+                <input type="text" id="title" th:field="*{title}" >
                 <small class="validation-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title
                     shouldn't be empty</small>
 
                 <label for="text">Описание урока</label>
-                <textarea id="text" rows="20" cols="30" th:field="*{text}" required></textarea>
+                <textarea id="text" rows="20" cols="30" th:field="*{text}"></textarea>
                 <small class="validation-error" th:if="${#fields.hasErrors('text')}" th:errors="*{text}">Text shouldn't
                     be empty</small>
 

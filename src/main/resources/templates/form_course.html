@@ -1,7 +1,8 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Редактирование курса</title>
+    <title th:text="${course.title}"></title>
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
@@ -13,19 +14,22 @@
 <div id="wrapper">
     <div id="featured-wrapper">
         <div class="form">
-            <form action="#">
                 <h1 th:text="${course.title}"></h1>
+                <h4 sec:authorize="hasRole('STUDENT')" th:text="${course.author}"></h4>
+
                 <img src="images/no_avatar.png" class="full_avatar">
                 <hr>
+            <form sec:authorize="hasRole('ADMIN')" action="#">
                 <input type="file" name="f">
                 <button type="submit" class="formButton">Обновить</button>
                 <hr>
             </form>
-            <form th:object="${course}" th:method="post" th:action="@{/course}">
+
+            <form sec:authorize="hasRole('ADMIN')" th:object="${course}" th:method="post" th:action="@{/course}">
                 <input type="hidden" th:field="*{id}">
                 <label for="course-name"><b>Название курса</b></label>
                 <input type="text" th:field="*{title}" id="course-name">
-                <div color="red">
+                <div>
                     <small class="validation-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Поле
                         названия курса должно быть заполнено</small>
                 </div>
@@ -38,31 +42,31 @@
                 <button type="submit" class="formButton">Сохранить</button>
                 <hr>
             </form>
-            <form>
-                <label><b><a name="course_id" th:href="@{../lesson/new(course_id = ${course.id})}">Новый
-                    урок</a></b></label>
-            </form>
+                <label><b>Список уроков курса:</b></label>
             <table class="table-form">
                 <tr>
                     <td>id</td>
                     <td>Название</td>
-                    <td>Действие</td>
+                    <td sec:authorize="hasRole('ADMIN')">Действие</td>
                 </tr>
                 <tr th:each="lesson : ${lessons}">
                     <td th:text="${lesson.id}"></td>
                     <td>
                         <a th:text="${lesson.title}" th:href="@{/lesson/{id}(id = ${lesson.id})}"></a>
-                    </td>
-                    <form th:method="delete" th:action="@{/lesson/{id}(id = ${lesson.id})}">
-                        <td>
+                    </td >
+                        <td sec:authorize="hasRole('ADMIN')">
+                            <form th:method="delete" th:action="@{/lesson/{id}(id = ${lesson.id})}">
                             <button type="submit" class="TableButton">Удалить</button>
+                            </form>
                         </td>
-                    </form>
                 </tr>
+                <form sec:authorize="hasRole('ADMIN')">
+                    <label><b><a name="course_id" th:href="@{../lesson/new(course_id = ${course.id})}">Новый
+                        урок</a></b></label>
             </table>
 
-            <label for=><b>Пользователи связанные с этим курсом</b></label>
-            <table class="table-form">
+            <label sec:authorize="hasRole('ADMIN')" for=><b>Пользователи связанные с этим курсом</b></label>
+            <table sec:authorize="hasRole('ADMIN')" class="table-form">
                 <tr>
                     <th>id</th>
                     <th>Имя Пользователя</th>

@@ -1,9 +1,13 @@
 package com.Turbo.Lms.service;
 
 import com.Turbo.Lms.Exceptions.NotFoundException;
+import com.Turbo.Lms.dao.CourseRepository;
 import com.Turbo.Lms.dao.LessonRepository;
+import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.domain.Lesson;
 import com.Turbo.Lms.dto.LessonDto;
+import com.Turbo.Lms.util.mapper.CourseMapper;
+import com.Turbo.Lms.util.mapper.LessonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -12,33 +16,28 @@ import java.util.List;
 
 @Service
 public class LessonService {
-    public LessonRepository lessonRepository;
+    private final LessonRepository lessonRepository;
+    private final LessonMapper lessonMapper;
 
-    public CourseService courseService;
 
     @Autowired
-    public LessonService(LessonRepository lessonRepository, CourseService courseService) {
+    public LessonService(LessonRepository lessonRepository, CourseRepository courseRepository, LessonMapper lessonMapper) {
         this.lessonRepository = lessonRepository;
-        this.courseService = courseService;
+        this.lessonMapper = lessonMapper;
     }
 
     public LessonDto findById(Long id) {
         Lesson lesson = findLessonById(id);
-        return new LessonDto(
-                lesson.getId(),
-                lesson.getTitle(),
-                lesson.getText(),
-                lesson.getCourse().getId());
+        return lessonMapper.toLessonDto(lesson);
     }
 
     public void save(LessonDto lessonDto) {
-        Lesson lesson = new Lesson(lessonDto.getId(), lessonDto.getTitle(), lessonDto.getText());
-        lesson.setCourse(courseService.findById(lessonDto.getCourseId()));
+        Lesson lesson = lessonMapper.toLessonFromDto(lessonDto);
         lessonRepository.save(lesson);
     }
 
-    public List<LessonDto> findAllForLessonIdWithoutText(@Param("id") long id) {
-        return lessonRepository.findAllForLessonIdWithoutText(id);
+    public List<LessonDto> findAllForLessonIdWithoutText(@Param("id") long courseId) {
+        return lessonRepository.findAllForLessonIdWithoutText(courseId);
     }
 
     public void delete(Long id) {
