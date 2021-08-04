@@ -57,7 +57,7 @@ public class CourseController {
         return "form_course";
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured(RoleType.ADMIN)
     @PostMapping
     public String submitCourseForm(@Valid CourseDto course, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -67,21 +67,21 @@ public class CourseController {
         return "redirect:/course";
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured(RoleType.ADMIN)
     @GetMapping("/new")
     public String courseForm(Model model) {
         model.addAttribute("course", new Course());
         return "form_course";
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured(RoleType.ADMIN)
     @DeleteMapping("/{id}")
     public String deleteCourse(@PathVariable("id") Long id) {
         courseService.delete(courseService.findById(id));
         return "redirect:/course";
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured(RoleType.ADMIN)
     @GetMapping("/{id}/assign")
     public String userAssign(Model model, @PathVariable("id") Long id) {
         model.addAttribute("users", userService.findUsersNotAssignedToCourse(id));
@@ -99,7 +99,7 @@ public class CourseController {
         return "redirect:/course/" + courseId + "/assign";
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured(RoleType.ADMIN)
     @DeleteMapping("/{courseId}/unsign")
     public String userDelete(@PathVariable("courseId") Long courseId, @RequestParam("userId") Long userId) {
         userService.unassignUserFromCourseById(userId, courseId);

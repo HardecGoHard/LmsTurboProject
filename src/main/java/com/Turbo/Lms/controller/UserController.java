@@ -3,6 +3,7 @@ package com.Turbo.Lms.controller;
 import com.Turbo.Lms.domain.Role;
 import com.Turbo.Lms.dto.UserDto;
 import com.Turbo.Lms.service.RoleService;
+import com.Turbo.Lms.service.RoleType;
 import com.Turbo.Lms.service.UserAuthService;
 import com.Turbo.Lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@Secured("ROLE_ADMIN")
+@Secured(RoleType.ADMIN)
 @RequestMapping("/admin/user")
 public class UserController {
     private final UserService userService;

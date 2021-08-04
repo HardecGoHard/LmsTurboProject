@@ -4,6 +4,7 @@ import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.domain.Lesson;
 import com.Turbo.Lms.dto.LessonDto;
 import com.Turbo.Lms.service.LessonService;
+import com.Turbo.Lms.service.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -23,13 +24,13 @@ public class LessonController {
     public LessonController(LessonService lessonService) {
         this.lessonService = lessonService;
     }
-    @Secured("ROLE_ADMIN")
+    @Secured(RoleType.ADMIN)
     @GetMapping("/new")
     public String lessonForm(Model model, @RequestParam("course_id") long id) {
         model.addAttribute("lesson", new LessonDto(id));
         return "lesson_form";
     }
-    @Secured("ROLE_ADMIN")
+    @Secured(RoleType.ADMIN)
     @PostMapping
     public String lessonSubmit(@Valid LessonDto lessonDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
@@ -44,7 +45,7 @@ public class LessonController {
         return "lesson_form";
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured(RoleType.ADMIN)
     @DeleteMapping("/{id}")
     public String deleteLesson(@PathVariable("id") Long id) {
         Long courseId = lessonService.findById(id).getCourseId();

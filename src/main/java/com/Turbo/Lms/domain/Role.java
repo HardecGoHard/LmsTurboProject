@@ -8,6 +8,8 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role {
 
+    private static final String ADMIN = "ROLE_ADMIN";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -15,7 +17,7 @@ public class Role {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "roles", cascade=CascadeType.ALL)
+    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
     private Set<User> users;
 
     public Role() {
@@ -48,6 +50,10 @@ public class Role {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    public static String getADMIN() {
+        return ADMIN;
     }
 
     @Override
