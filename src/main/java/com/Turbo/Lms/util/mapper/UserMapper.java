@@ -5,6 +5,9 @@ import com.Turbo.Lms.dto.UserDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserMapper {
     private final PasswordEncoder encoder;
@@ -28,5 +31,8 @@ public class UserMapper {
                     encoder.encode(userDto.getPassword()),
                     userDto.getRoles()
             );
+    }
+    public List<UserDto> convertToDtoList(List<User> userList) {
+        return userList.stream().map(this::toUserDto).collect(Collectors.toList());
     }
 }

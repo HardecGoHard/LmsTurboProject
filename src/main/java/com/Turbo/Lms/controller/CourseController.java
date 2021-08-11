@@ -48,18 +48,18 @@ public class CourseController {
         return "find_course";
     }
 
-    @RequestMapping("/{id}")
-    public String courseForm(Model model, @PathVariable("id") Long id) {
-        CourseDto course = courseService.findById(id);
+    @RequestMapping("/{courseId}")
+    public String courseForm(Model model, @PathVariable("courseId") Long courseId) {
+        CourseDto course = courseService.findById(courseId);
         model.addAttribute("course", course);
-        model.addAttribute("lessons", lessonService.findAllForLessonIdWithoutText(id));
-        model.addAttribute("users", userService.getUsersOfCourse(course.getId()));
+        model.addAttribute("lessons", lessonService.findAllForLessonIdWithoutText(courseId));
+        model.addAttribute("users", userService.getUsersOfCourse(courseId));
         return "form_course";
     }
 
     @Secured(RoleType.ADMIN)
     @PostMapping
-    public String submitCourseForm(@Valid CourseDto course, BindingResult bindingResult) {
+    public String submitCourseForm(@Valid @ModelAttribute("course") CourseDto course, BindingResult bindingResult ) {
         if (bindingResult.hasErrors()) {
             return "form_course";
         }
@@ -75,24 +75,24 @@ public class CourseController {
     }
 
     @Secured(RoleType.ADMIN)
-    @DeleteMapping("/{id}")
-    public String deleteCourse(@PathVariable("id") Long id) {
+    @DeleteMapping("/{courseId}")
+    public String deleteCourse(@PathVariable("courseId") Long id) {
         courseService.delete(courseService.findById(id));
         return "redirect:/course";
     }
 
     @Secured(RoleType.ADMIN)
-    @GetMapping("/{id}/assign")
-    public String userAssign(Model model, @PathVariable("id") Long id) {
+    @GetMapping("/{courseId}/assign")
+    public String usersAssignForm(Model model, @PathVariable("courseId") Long id) {
         model.addAttribute("users", userService.findUsersNotAssignedToCourse(id));
         model.addAttribute("courseId", id);
         return "assign_user";
     }
 
     @PostMapping("/{courseId}/assign")
-    public String assignUserForm(@PathVariable("courseId") Long courseId,
-                                 @RequestParam("userId") Long userid, HttpServletRequest request) {
-        userService.assignUserById(userid, courseId);
+    public String assignUser(@PathVariable("courseId") Long courseId,
+                             @RequestParam("userId") Long userId, HttpServletRequest request) {
+        courseService.assignUserById(userId, courseId);
         if (request.isUserInRole("ROLE_STUDENT")) {
             return "redirect:/course";
         }
@@ -102,7 +102,7 @@ public class CourseController {
     @Secured(RoleType.ADMIN)
     @DeleteMapping("/{courseId}/unsign")
     public String userDelete(@PathVariable("courseId") Long courseId, @RequestParam("userId") Long userId) {
-        userService.unassignUserFromCourseById(userId, courseId);
+        courseService.unassignUserFromCourseById(userId, courseId);
         return "redirect:/course/" + courseId;
     }
 }

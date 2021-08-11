@@ -15,12 +15,9 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Автор курса должен быть заполнен")
     @Column
     private String author;
 
-    @TitleCase
-    @NotBlank(message = "Название курса должно быть заполнено")
     @Column
     private String title;
 

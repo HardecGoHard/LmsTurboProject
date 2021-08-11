@@ -24,7 +24,7 @@ public class UserController {
     private final RoleService roleService;
 
     @Autowired
-    public UserController(UserService userService, UserAuthService userAuthService, RoleService roleService) {
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -61,7 +61,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
-        userService.deleteById(id);
+        userService.delete(userService.findById(id));
         return "redirect:/admin/user";
     }
 

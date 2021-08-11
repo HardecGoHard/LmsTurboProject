@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
-public class GlobalControllerExceptionHandler {
+public class GlobalExceptionHandlerController {
     @ExceptionHandler
     public ModelAndView notFoundExceptionHandler(NotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView("not_found");

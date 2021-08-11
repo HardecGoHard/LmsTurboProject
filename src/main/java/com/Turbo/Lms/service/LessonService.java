@@ -9,6 +9,7 @@ import com.Turbo.Lms.dto.LessonDto;
 import com.Turbo.Lms.util.mapper.CourseMapper;
 import com.Turbo.Lms.util.mapper.LessonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,14 @@ import java.util.List;
 public class LessonService {
     private final LessonRepository lessonRepository;
     private final LessonMapper lessonMapper;
+    private CourseRepository courseRepository;
 
 
     @Autowired
     public LessonService(LessonRepository lessonRepository, CourseRepository courseRepository, LessonMapper lessonMapper) {
         this.lessonRepository = lessonRepository;
         this.lessonMapper = lessonMapper;
+        this.courseRepository = courseRepository;
     }
 
     public LessonDto findById(Long id) {
@@ -33,6 +36,8 @@ public class LessonService {
 
     public void save(LessonDto lessonDto) {
         Lesson lesson = lessonMapper.toLessonFromDto(lessonDto);
+        Course course = courseRepository.findById((lessonDto.getCourseId())).get();
+        lesson.setCourse(course);
         lessonRepository.save(lesson);
     }
 

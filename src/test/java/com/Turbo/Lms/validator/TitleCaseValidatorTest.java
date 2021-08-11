@@ -1,4 +1,4 @@
-package com.Turbo.Lms;
+package com.Turbo.Lms.validator;
 
 import com.Turbo.Lms.annotations.TitleCase;
 import com.Turbo.Lms.validator.TitleCaseValidator;
@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest
+
 public class TitleCaseValidatorTest {
 
     private static TitleCaseValidator titleCaseValidator;
@@ -44,7 +43,7 @@ public class TitleCaseValidatorTest {
                                                      "she is lost control"};
 
     @BeforeAll
-    public void init() {
+    public static void init() {
         titleCaseValidator = new TitleCaseValidator();
     }
 

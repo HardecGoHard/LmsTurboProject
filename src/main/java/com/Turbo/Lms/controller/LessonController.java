@@ -1,7 +1,5 @@
 package com.Turbo.Lms.controller;
 
-import com.Turbo.Lms.domain.Course;
-import com.Turbo.Lms.domain.Lesson;
 import com.Turbo.Lms.dto.LessonDto;
 import com.Turbo.Lms.service.LessonService;
 import com.Turbo.Lms.service.RoleType;
@@ -24,21 +22,24 @@ public class LessonController {
     public LessonController(LessonService lessonService) {
         this.lessonService = lessonService;
     }
+
     @Secured(RoleType.ADMIN)
     @GetMapping("/new")
-    public String lessonForm(Model model, @RequestParam("course_id") long id) {
+    public String lessonForm(Model model, @RequestParam("courseId") long id) {
         model.addAttribute("lesson", new LessonDto(id));
         return "lesson_form";
     }
+
     @Secured(RoleType.ADMIN)
     @PostMapping
-    public String lessonSubmit(@Valid LessonDto lessonDto, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
+    public String lessonSubmit(@Valid @ModelAttribute("lesson") LessonDto lessonDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "lesson_form";
         }
         lessonService.save(lessonDto);
-        return "redirect:/course/"+lessonDto.getCourseId();
+        return "redirect:/course/" + lessonDto.getCourseId();
     }
+
     @RequestMapping("/{id}")
     public String lessonForm(Model model, @PathVariable("id") Long id) {
         model.addAttribute("lesson", lessonService.findById(id));
@@ -50,6 +51,7 @@ public class LessonController {
     public String deleteLesson(@PathVariable("id") Long id) {
         Long courseId = lessonService.findById(id).getCourseId();
         lessonService.delete(id);
-        return "redirect:/course/"+courseId;
+        return "redirect:/course/" + courseId;
     }
+
 }
