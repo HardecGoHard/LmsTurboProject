@@ -1,6 +1,7 @@
 package com.Turbo.Lms.domain;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "lessons")
@@ -65,5 +66,20 @@ public class Lesson {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lesson lesson = (Lesson) o;
+        return Objects.equals(id, lesson.id) &&
+                Objects.equals(title, lesson.title) &&
+                Objects.equals(text, lesson.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, text);
     }
 }

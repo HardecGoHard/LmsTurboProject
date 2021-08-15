@@ -13,79 +13,53 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository,
-                       CourseRepository courseRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
-        this.courseRepository = courseRepository;
         this.userMapper = userMapper;
     }
 
     public List<UserDto> findAll() {
-        return convertListToDto(userRepository.findAll());
+        return userMapper.convertToDtoList(userRepository.findAll());
     }
 
-    public void deleteById(long id) {
-        userRepository.deleteById(id);
+    public void delete(UserDto userDto) {
+        userRepository.delete(userMapper.toUserFromDto(userDto));
     }
 
     public void save(UserDto userDto) {
         userRepository.save(userMapper.toUserFromDto(userDto));
     }
 
-    public UserDto findById(long id) {
+    public UserDto findById(Long id) {
         return userRepository.findById(id)
-                .map(usr -> userMapper.toUserDto(usr))
+                .map(userMapper::toUserDto)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
-    public List<UserDto> findUsersNotAssignedToCourse(long courseId) {
-        return convertListToDto(userRepository.findUsersNotAssignedToCourse(courseId));
+    public List<UserDto> findUsersNotAssignedToCourse(Long courseId) {
+        return userMapper.convertToDtoList(userRepository.findUsersNotAssignedToCourse(courseId));
     }
 
     public List<UserDto> findByUsernameLike(String username) {
-        return convertListToDto(userRepository.findByUsernameLike(username));
+        return userMapper.convertToDtoList(userRepository.findByUsernameLike(username));
     }
 
     public List<UserDto> getUsersOfCourse(Long id) {
-        return convertListToDto(new ArrayList<>(userRepository.getUsersOfCourse(id)));
+        return  userMapper.convertToDtoList(new ArrayList<>(userRepository.getUsersOfCourse(id)));
     }
 
-    public void assignUserById(Long id, Long courseId) {
-        signUserToCourse(id, courseId, false);
-    }
-
-    public void unassignUserFromCourseById(Long id, Long courseId) {
-        signUserToCourse(id, courseId, true);
-    }
-
-    private List<UserDto> convertListToDto(List<User> list) {
-        return list.stream().map(u -> userMapper.toUserDto(u)).collect(Collectors.toList());
-    }
-
-    private void signUserToCourse(Long id, Long courseId, boolean isDelete) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        Course course =  courseRepository.findById(courseId).get();
-        if (isDelete) {
-            user.getCourses().remove(course);
-            course.getUsers().remove(user);
-        } else {
-            course.getUsers().add(user);
-            user.getCourses().add(course);
-        }
-        courseRepository.save(course);
-    }
 
     public UserDto findUserByUsername(String remoteUser) {
-        return userRepository.findUserByUsername(remoteUser).map(usr -> userMapper.toUserDto(usr))
+        return userRepository.findUserByUsername(remoteUser).map(userMapper::toUserDto)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 }

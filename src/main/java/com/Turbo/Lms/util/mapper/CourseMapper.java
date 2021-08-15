@@ -4,6 +4,9 @@ import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.dto.CourseDto;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class CourseMapper {
     public CourseDto toCourseDto(Course course) {
@@ -19,5 +22,8 @@ public class CourseMapper {
                 courseDto.getAuthor(),
                 courseDto.getTitle()
         );
+    }
+    public List<CourseDto> convertToDtoList(List<Course> courseList){
+        return courseList.stream().map(this::toCourseDto).collect(Collectors.toList());
     }
 }
