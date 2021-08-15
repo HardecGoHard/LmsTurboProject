@@ -21,6 +21,12 @@ public class User {
     @ManyToMany()
     private Set<Role> roles;
 
+    @Column
+    private String password;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private AvatarImage avatarImage;
+
     public User(Long id, String username, String password, Set<Role> roles) {
         this.id = id;
         this.username = username;
@@ -33,16 +39,8 @@ public class User {
         this.roles = roles;
     }
 
-    @Column
-    private String password;
-
     public User() {
     }
-
-    public User(String username) {
-        this.username = username;
-    }
-
 
     public Long getId() {
         return id;

@@ -17,7 +17,7 @@
                         <a th:href="@{/admin/user}">Пользователи</a>
                     </li>
                     <li th:classappend="${activePage == 'profile'} ? current_page_item" sec:authorize="isAuthenticated()">
-                        <a sec:authentication="principal.username">username</a>
+                        <a sec:authentication="principal.username" th:href="@{/profile}">username</a>
                     </li>
                     <li sec:authorize="isAuthenticated()" >
                         <form th:method="post"  th:action="@{/logout}">
