@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "avatar_images")
-public class AvatarImage {
+@Table(name = "user_avatar_images")
+public class UserAvatarImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,14 +20,14 @@ public class AvatarImage {
     @OneToOne
     private User user;
 
-    public AvatarImage(Long id, String contentType, String filename, User user) {
+    public UserAvatarImage(Long id, String contentType, String filename, User user) {
         this.id = id;
         this.contentType = contentType;
         this.filename = filename;
         this.user = user;
     }
 
-    public AvatarImage() {
+    public UserAvatarImage() {
 
     }
 
@@ -67,7 +67,7 @@ public class AvatarImage {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AvatarImage that = (AvatarImage) o;
+        UserAvatarImage that = (UserAvatarImage) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(contentType, that.contentType) &&
                 Objects.equals(filename, that.filename);

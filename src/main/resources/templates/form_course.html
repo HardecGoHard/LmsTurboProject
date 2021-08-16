@@ -17,12 +17,13 @@
                 <h1 th:text="${course.title}"></h1>
                 <h4 sec:authorize="hasRole('STUDENT')" th:text="${course.author}"></h4>
 
-                <img src="images/no_avatar.png" class="full_avatar">
-                <hr>
-            <form sec:authorize="hasRole('ADMIN')" action="#">
-                <input type="file" name="f">
+            <img th:src="@{/course/{id}/avatar(id = ${course.id})}" alt="Course profile" class="full_avatar">
+            <hr>
+
+            <form th:method="post" th:action="@{/course/{id}/avatar(id = ${course.id})}" sec:authorize="hasRole('ADMIN')" enctype="multipart/form-data">
+                <label for="avatar">Выберите обложку курса для загрузки</label>
+                <input id="avatar" name="avatar" type="file"/>
                 <button type="submit" class="formButton">Обновить</button>
-                <hr>
             </form>
 
             <form sec:authorize="hasRole('ADMIN')" th:object="${course}" th:method="post" th:action="@{/course}">

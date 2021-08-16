@@ -1,8 +1,8 @@
 package com.Turbo.Lms.service;
 
-import com.Turbo.Lms.dao.AvatarImageRepository;
+import com.Turbo.Lms.dao.UserAvatarImageRepository;
 import com.Turbo.Lms.dao.UserRepository;
-import com.Turbo.Lms.domain.AvatarImage;
+import com.Turbo.Lms.domain.UserAvatarImage;
 import com.Turbo.Lms.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,38 +21,38 @@ import java.util.UUID;
 import static java.nio.file.StandardOpenOption.*;
 
 @Service
-public class AvatarStorageService {
+public class UserAvatarStorageService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AvatarStorageService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserAvatarStorageService.class);
 
-    private final AvatarImageRepository avatarImageRepository;
+    private final UserAvatarImageRepository userAvatarImageRepository;
 
     private final UserRepository userRepository;
 
-    @Value("${file.storage.path}")
+    @Value("${user.avatar.storage.path}")
     private String path;
 
     @Autowired
-    public AvatarStorageService(AvatarImageRepository avatarImageRepository, UserRepository userRepository) {
-        this.avatarImageRepository = avatarImageRepository;
+    public UserAvatarStorageService(UserAvatarImageRepository userAvatarImageRepository, UserRepository userRepository) {
+        this.userAvatarImageRepository = userAvatarImageRepository;
         this.userRepository = userRepository;
     }
 
-    public void save(String username, String contentType, InputStream is) {
-        Optional<AvatarImage> opt = avatarImageRepository.findAvatarImageByUser_Username(username);
-        AvatarImage avatarImage;
+    public void save(Long userId, String contentType, InputStream is) {
+        Optional<UserAvatarImage> opt = userAvatarImageRepository.findAvatarImageByUser_Id(userId);
+        UserAvatarImage userAvatarImage;
         String filename;
         if (opt.isEmpty()) {
             filename = UUID.randomUUID().toString();
-            User user = userRepository.findUserByUsername(username)
+            User user = userRepository.findById(userId)
                     .orElseThrow(IllegalArgumentException::new);
-            avatarImage = new AvatarImage(null, contentType, filename, user);
+            userAvatarImage = new UserAvatarImage(null, contentType, filename, user);
         } else {
-            avatarImage = opt.get();
-            filename = avatarImage.getFilename();
-            avatarImage.setContentType(contentType);
+            userAvatarImage = opt.get();
+            filename = userAvatarImage.getFilename();
+            userAvatarImage.setContentType(contentType);
         }
-        avatarImageRepository.save(avatarImage);
+        userAvatarImageRepository.save(userAvatarImage);
 
         try (OutputStream os = Files.newOutputStream(Path.of(path, filename), CREATE, WRITE, TRUNCATE_EXISTING)) {
             is.transferTo(os);
@@ -63,14 +62,14 @@ public class AvatarStorageService {
         }
     }
 
-    public Optional<String> getContentTypeByUser(String username) {
-        return avatarImageRepository.findAvatarImageByUser_Username(username)
-                .map(AvatarImage::getContentType);
+    public Optional<String> getContentTypeByUser(Long userId) {
+        return userAvatarImageRepository.findAvatarImageByUser_Id(userId)
+                .map(UserAvatarImage::getContentType);
     }
 
-    public Optional<byte[]> getAvatarImageByUser(String username) {
-        return avatarImageRepository.findAvatarImageByUser_Username(username)
-                .map(AvatarImage::getFilename)
+    public Optional<byte[]> getAvatarImageByUser(Long userId) {
+        return userAvatarImageRepository.findAvatarImageByUser_Id(userId)
+                .map(UserAvatarImage::getFilename)
                 .map(filename -> {
                     try {
                         return Files.readAllBytes(Path.of(path, filename));

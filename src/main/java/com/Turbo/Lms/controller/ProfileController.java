@@ -3,8 +3,7 @@ package com.Turbo.Lms.controller;
 
 import com.Turbo.Lms.Exceptions.InternalServerError;
 import com.Turbo.Lms.Exceptions.NotFoundException;
-import com.Turbo.Lms.dto.UserDto;
-import com.Turbo.Lms.service.AvatarStorageService;
+import com.Turbo.Lms.service.UserAvatarStorageService;
 import com.Turbo.Lms.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,19 +16,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
     private UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
-    private AvatarStorageService avatarStorageService;
+    private UserAvatarStorageService userAvatarStorageService;
 
     @Autowired
-    public ProfileController(UserService userService, AvatarStorageService avatarStorageService) {
+    public ProfileController(UserService userService, UserAvatarStorageService userAvatarStorageService) {
         this.userService = userService;
-        this.avatarStorageService = avatarStorageService;
+        this.userAvatarStorageService = userAvatarStorageService;
     }
 
     @GetMapping
@@ -38,24 +35,24 @@ public class ProfileController {
         return "profile";
     }
 
-    @PostMapping("/avatar")
-    public String updateAvatarImage(Authentication auth,
+    @PostMapping("/avatar/{userId}")
+    public String updateAvatarImage(@PathVariable("userId") Long userId,
                                     @RequestParam("avatar") MultipartFile avatar) {
         logger.info("File name {}, file content type {}, file size {}", avatar.getOriginalFilename(), avatar.getContentType(), avatar.getSize());
         try {
-            avatarStorageService.save(auth.getName(), avatar.getContentType(), avatar.getInputStream());
+            userAvatarStorageService.save(userId, avatar.getContentType(), avatar.getInputStream());
         } catch (Exception ex) {
             logger.info("", ex);
             throw new InternalServerError();
         }
         return "redirect:/profile";
     }
-    @GetMapping("/avatar")
+    @GetMapping("/avatar/{userId}")
     @ResponseBody
-    public ResponseEntity<byte[]> avatarImage(Authentication auth) {
-        String contentType = avatarStorageService.getContentTypeByUser(auth.getName())
+    public ResponseEntity<byte[]> avatarImage(@PathVariable("userId") Long userId) {
+        String contentType = userAvatarStorageService.getContentTypeByUser(userId)
                 .orElseThrow(() -> new NotFoundException("Аватар не найден"));
-        byte[] data = avatarStorageService.getAvatarImageByUser(auth.getName())
+        byte[] data = userAvatarStorageService.getAvatarImageByUser(userId)
                 .orElseThrow(() -> new NotFoundException("Аватар не найден"));
         return ResponseEntity
                 .ok()

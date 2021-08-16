@@ -21,6 +21,9 @@ public class CourseDto {
         this.author = author;
         this.title = title;
     }
+    public CourseDto(){
+
+    }
 
     public CourseDto(Long id) {
         this.id = id;

@@ -15,10 +15,10 @@
     <div id="featured-wrapper">
         <div class="form">
             <h1>Редактирование профиля</h1>
-            <img img th:src="@{/profile/avatar}" alt="User profile" class="full_avatar">
+            <img th:src="@{/profile/avatar/{id}(id = ${user.id})}" alt="User profile" class="full_avatar">
             <hr>
 
-            <form th:method="post" th:action="@{/profile/avatar}" enctype="multipart/form-data">
+            <form th:method="post" th:action="@{/profile/avatar/{id}(id = ${user.id})}" enctype="multipart/form-data">
                 <label for="avatar">Выберите аватар для загрузки</label>
                 <input id="avatar" name="avatar" type="file"/>
             <button type="submit" class="formButton">Обновить</button>

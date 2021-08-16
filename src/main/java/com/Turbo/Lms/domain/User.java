@@ -1,7 +1,6 @@
 package com.Turbo.Lms.domain;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 @Entity
@@ -25,7 +24,7 @@ public class User {
     private String password;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private AvatarImage avatarImage;
+    private UserAvatarImage userAvatarImage;
 
     public User(Long id, String username, String password, Set<Role> roles) {
         this.id = id;
