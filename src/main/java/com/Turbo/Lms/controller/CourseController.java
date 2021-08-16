@@ -128,9 +128,9 @@ public class CourseController {
     @GetMapping("/{courseId}/avatar")
     @ResponseBody
     public ResponseEntity<byte[]> avatarImage(@PathVariable("courseId") Long courseId) {
-        String contentType = courseAvatarStorageService.getContentTypeByCourse(courseId)
+        String contentType = courseAvatarStorageService.getContentTypeByEntity(courseId)
                 .orElseThrow(() -> new NotFoundException("Аватар не найден"));
-        byte[] data = courseAvatarStorageService.getAvatarImageByCourse(courseId)
+        byte[] data = courseAvatarStorageService.getAvatarImageByEntity(courseId)
                 .orElseThrow(() -> new NotFoundException("Аватар не найден"));
         return ResponseEntity
                 .ok()

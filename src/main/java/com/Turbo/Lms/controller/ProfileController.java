@@ -3,6 +3,7 @@ package com.Turbo.Lms.controller;
 
 import com.Turbo.Lms.Exceptions.InternalServerError;
 import com.Turbo.Lms.Exceptions.NotFoundException;
+import com.Turbo.Lms.service.AbstractAvatarStorageService;
 import com.Turbo.Lms.service.UserAvatarStorageService;
 import com.Turbo.Lms.service.UserService;
 import org.slf4j.Logger;
@@ -19,9 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
-    private UserService userService;
+    private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
-    private UserAvatarStorageService userAvatarStorageService;
+    private  UserAvatarStorageService userAvatarStorageService;
 
     @Autowired
     public ProfileController(UserService userService, UserAvatarStorageService userAvatarStorageService) {
@@ -49,10 +50,10 @@ public class ProfileController {
     }
     @GetMapping("/avatar/{userId}")
     @ResponseBody
-    public ResponseEntity<byte[]> avatarImage(@PathVariable("userId") Long userId) {
-        String contentType = userAvatarStorageService.getContentTypeByUser(userId)
+    public ResponseEntity<byte[]> avatarImage(@PathVariable("userId") Long userId)  {
+        String contentType = userAvatarStorageService.getContentTypeByEntity(userId)
                 .orElseThrow(() -> new NotFoundException("Аватар не найден"));
-        byte[] data = userAvatarStorageService.getAvatarImageByUser(userId)
+        byte[] data = userAvatarStorageService.getAvatarImageByEntity(userId)
                 .orElseThrow(() -> new NotFoundException("Аватар не найден"));
         return ResponseEntity
                 .ok()

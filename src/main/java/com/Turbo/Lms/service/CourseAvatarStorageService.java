@@ -4,6 +4,7 @@ import com.Turbo.Lms.dao.CourseAvatarImageRepository;
 import com.Turbo.Lms.dao.CourseRepository;
 import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.domain.CourseAvatarImage;
+import com.Turbo.Lms.domain.User;
 import com.Turbo.Lms.domain.UserAvatarImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ import java.util.UUID;
 import static java.nio.file.StandardOpenOption.*;
 
 @Service
-public class CourseAvatarStorageService {
+public class CourseAvatarStorageService extends AbstractAvatarStorageService<CourseAvatarImage, Course>{
     private static final Logger logger = LoggerFactory.getLogger(CourseAvatarStorageService.class);
 
     private final CourseRepository courseRepository;
@@ -35,45 +36,51 @@ public class CourseAvatarStorageService {
         this.courseAvatarImageRepository = courseAvatarImageRepository;
     }
 
-    public void save(Long courseId, String contentType, InputStream is) {
-        Optional<CourseAvatarImage> opt = courseAvatarImageRepository.findByCourse_Id(courseId);
-        CourseAvatarImage courseAvatarImage;
-        String filename;
-        if (opt.isEmpty()) {
-            filename = UUID.randomUUID().toString();
-            Course course = courseRepository.findById(courseId)
-                    .orElseThrow(IllegalArgumentException::new);
-            courseAvatarImage = new CourseAvatarImage(null, contentType, filename, course);
-        } else {
-            courseAvatarImage = opt.get();
-            filename = courseAvatarImage.getFilename();
-            courseAvatarImage.setContentType(contentType);
-        }
-        courseAvatarImageRepository.save(courseAvatarImage);
-
-        try (OutputStream os = Files.newOutputStream(Path.of(path, filename), CREATE, WRITE, TRUNCATE_EXISTING)) {
-            is.transferTo(os);
-        } catch (Exception ex) {
-            logger.error("Can't write to file {}", filename, ex);
-            throw new IllegalStateException(ex);
-        }
+    @Override
+    protected Optional<CourseAvatarImage> findAvatarImageInRepository(Long id) {
+        return courseAvatarImageRepository.findByCourse_Id(id);
     }
 
-    public Optional<String> getContentTypeByCourse(Long courseId) {
-        return courseAvatarImageRepository.findByCourse_Id(courseId)
+    @Override
+    protected Course findEntityInRepository(Long id) {
+        return courseRepository.findById(id).get();
+    }
+
+    @Override
+    protected CourseAvatarImage createNewAvatarImage(String contentType, String filename, Course entity) {
+        return new CourseAvatarImage(null, contentType,filename,entity);
+    }
+
+    @Override
+    protected void saveAvatarImageToRepository(CourseAvatarImage avatarImage) {
+        courseAvatarImageRepository.save(avatarImage);
+    }
+
+    @Override
+    protected Optional<String> getContentTypeMap(Long id) {
+        return findAvatarImageInRepository(id)
                 .map(CourseAvatarImage::getContentType);
     }
 
-    public Optional<byte[]> getAvatarImageByCourse(Long courseId) {
-        return courseAvatarImageRepository.findByCourse_Id(courseId)
+    @Override
+    protected String getPath() {
+        return this.path;
+    }
+
+    @Override
+    protected String getFilename(CourseAvatarImage avatarImage) {
+        return avatarImage.getFilename();
+    }
+
+    @Override
+    protected void setContentType(CourseAvatarImage avatarImage, String contentType) {
+        avatarImage.setContentType(contentType);
+    }
+
+    @Override
+    protected Optional<byte[]> getAvatarImageMap(Long id) {
+        return findAvatarImageInRepository(id)
                 .map(CourseAvatarImage::getFilename)
-                .map(filename -> {
-                    try {
-                        return Files.readAllBytes(Path.of(path, filename));
-                    } catch (IOException ex) {
-                        logger.error("Can't read file {}", filename, ex);
-                        throw new IllegalStateException(ex);
-                    }
-                });
+                .map(filename -> readFileImage(filename));
     }
 }
