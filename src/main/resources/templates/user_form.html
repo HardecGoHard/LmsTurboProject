@@ -14,12 +14,16 @@
 <div id="wrapper">
     <div id="featured-wrapper">
             <div class="form">
-                <h1>Редактирование профиля</h1>
+                <h1>Профиль</h1>
+
+                <form th:object="${user}" th:method="post" th:action="@{/profile/avatar}">
                 <img src="../images/no_avatar.png" class="full_avatar">
                 <hr>
 
                 <input type="file" name="f">
                 <button type="submit" class="formButton">Обновить</button>
+                </form>
+
                 <hr>
                 <form th:object="${user}" th:method="post" th:action="@{/admin/user}">
                     <input type="hidden" th:field="*{id}">

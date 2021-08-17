@@ -1,7 +1,6 @@
 package com.Turbo.Lms.domain;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 @Entity
@@ -21,6 +20,12 @@ public class User {
     @ManyToMany()
     private Set<Role> roles;
 
+    @Column
+    private String password;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private UserAvatarImage userAvatarImage;
+
     public User(Long id, String username, String password, Set<Role> roles) {
         this.id = id;
         this.username = username;
@@ -33,16 +38,8 @@ public class User {
         this.roles = roles;
     }
 
-    @Column
-    private String password;
-
     public User() {
     }
-
-    public User(String username) {
-        this.username = username;
-    }
-
 
     public Long getId() {
         return id;

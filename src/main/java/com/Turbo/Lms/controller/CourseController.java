@@ -1,5 +1,7 @@
 package com.Turbo.Lms.controller;
 
+import com.Turbo.Lms.Exceptions.InternalServerError;
+import com.Turbo.Lms.Exceptions.NotFoundException;
 import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.dto.CourseDto;
 import com.Turbo.Lms.dto.UserDto;
@@ -7,11 +9,14 @@ import com.Turbo.Lms.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -23,12 +28,14 @@ public class CourseController {
     private final CourseService courseService;
     private final UserService userService;
     private final LessonService lessonService;
+    private final CourseAvatarStorageService courseAvatarStorageService;
 
     @Autowired
-    public CourseController(CourseService courseService, UserService userService, LessonService lessonService) {
+    public CourseController(CourseService courseService, UserService userService, LessonService lessonService, CourseAvatarStorageService courseAvatarStorageService) {
         this.courseService = courseService;
         this.userService = userService;
         this.lessonService = lessonService;
+        this.courseAvatarStorageService = courseAvatarStorageService;
     }
 
     @GetMapping
@@ -104,5 +111,30 @@ public class CourseController {
     public String userDelete(@PathVariable("courseId") Long courseId, @RequestParam("userId") Long userId) {
         courseService.unassignUserFromCourseById(userId, courseId);
         return "redirect:/course/" + courseId;
+    }
+
+    @PostMapping("/{courseId}/avatar")
+    public String updateAvatarImage(@PathVariable("courseId") Long courseId,
+                                    @RequestParam("avatar") MultipartFile avatar) {
+        logger.info("File name {}, file content type {}, file size {}", avatar.getOriginalFilename(), avatar.getContentType(), avatar.getSize());
+        try {
+            courseAvatarStorageService.save(courseId, avatar.getContentType(), avatar.getInputStream());
+        } catch (Exception ex) {
+            logger.info("", ex);
+            throw new InternalServerError();
+        }
+        return "redirect:/course/"+courseId;
+    }
+    @GetMapping("/{courseId}/avatar")
+    @ResponseBody
+    public ResponseEntity<byte[]> avatarImage(@PathVariable("courseId") Long courseId) {
+        String contentType = courseAvatarStorageService.getContentTypeByEntity(courseId)
+                .orElseThrow(() -> new NotFoundException("Аватар не найден"));
+        byte[] data = courseAvatarStorageService.getAvatarImageByEntity(courseId)
+                .orElseThrow(() -> new NotFoundException("Аватар не найден"));
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(data);
     }
 }

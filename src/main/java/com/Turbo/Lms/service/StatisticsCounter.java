@@ -7,6 +7,6 @@ public class StatisticsCounter {
     private static final Logger log = LoggerFactory.getLogger(StatisticsCounter.class);
 
     public void countHandlerCall() {
-        log.info("Кто-то дернул нашу ручку!");
+        log.info("");
     }
 }
