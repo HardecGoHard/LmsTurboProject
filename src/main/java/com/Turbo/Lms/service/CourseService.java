@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CourseService {
@@ -62,14 +61,14 @@ public class CourseService {
     }
 
     public void assignUserById(Long id, Long courseId) {
-        signUserToCourse(id, courseId, false);
+        userToCourse(id, courseId, false);
     }
 
     public void unassignUserFromCourseById(Long id, Long courseId) {
-        signUserToCourse(id, courseId, true);
+        userToCourse(id, courseId, true);
     }
 
-    private void signUserToCourse(Long id, Long courseId, boolean isDelete) {
+    private void userToCourse(Long id, Long courseId, boolean isDelete) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Course course = courseRepository.findById(courseId).get();
         if (isDelete) {
@@ -81,7 +80,5 @@ public class CourseService {
         }
         courseRepository.save(course);
     }
-
-
 }
 

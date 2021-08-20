@@ -41,15 +41,6 @@
                     <small class="validation-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
                         пароль должен быть заполнен и подоходить требованиям</small>
                 </div>
-
-                <label for="roles">Roles</label>
-                <select multiple class="form-control" id="roles" th:field="*{roles}" required>
-                    <option th:each="role : ${roles}"
-                            th:text="${role.name}"
-                            th:value="${role.id}"
-                            th:selected="${user.roles?.contains(role)}"></option>
-                </select>
-
                 <hr>
                 <button type="submit" class="formButton">Сохранить</button>
             </form>

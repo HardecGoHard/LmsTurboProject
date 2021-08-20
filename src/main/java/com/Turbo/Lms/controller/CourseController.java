@@ -108,7 +108,7 @@ public class CourseController {
 
     @Secured(RoleType.ADMIN)
     @DeleteMapping("/{courseId}/unsign")
-    public String userDelete(@PathVariable("courseId") Long courseId, @RequestParam("userId") Long userId) {
+    public String unassignUser(@PathVariable("courseId") Long courseId, @RequestParam("userId") Long userId) {
         courseService.unassignUserFromCourseById(userId, courseId);
         return "redirect:/course/" + courseId;
     }
