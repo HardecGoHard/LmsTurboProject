@@ -1,9 +1,12 @@
 package com.Turbo.Lms.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Data
 @Table(name = "lessons")
 public class Lesson {
 

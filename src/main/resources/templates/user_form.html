@@ -13,47 +13,47 @@
 
 <div id="wrapper">
     <div id="featured-wrapper">
-            <div class="form">
-                <h1>Профиль</h1>
+        <div class="form">
+            <h1>Профиль</h1>
 
-                <form th:object="${user}" th:method="post" th:action="@{/profile/avatar}">
+            <form th:object="${user}" th:method="post" th:action="@{/profile/avatar}">
                 <img src="../images/no_avatar.png" class="full_avatar">
                 <hr>
 
                 <input type="file" name="f">
                 <button type="submit" class="formButton">Обновить</button>
-                </form>
+            </form>
+
+            <hr>
+            <form th:object="${user}" th:method="post" th:action="@{/admin/user}">
+                <input type="hidden" th:field="*{id}">
+
+                <label for="name"><b>Изменить логин</b></label>
+                <input type="text" placeholder="Введите логин" th:field="*{username}" name="name" id="name">
+                <div>
+                    <small class="validation-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+                        логин должен быть заполнен</small>
+                </div>
+
+                <label for="password"><b>Пароль</b></label>
+                <input type="password" placeholder="Введите пароль" id="password" th:field="*{password}">
+                <div>
+                    <small class="validation-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                        пароль должен быть заполнен и подоходить требованиям</small>
+                </div>
+
+                <label for="roles">Roles</label>
+                <select multiple class="form-control" id="roles" th:field="*{roles}" required>
+                    <option th:each="role : ${roles}"
+                            th:text="${role.name}"
+                            th:value="${role.id}"
+                            th:selected="${user.roles?.contains(role)}"></option>
+                </select>
 
                 <hr>
-                <form th:object="${user}" th:method="post" th:action="@{/admin/user}">
-                    <input type="hidden" th:field="*{id}">
-
-                    <label for="name"><b>Изменить логин</b></label>
-                    <input type="text" placeholder="Введите логин" th:field="*{username}" name="name" id="name">
-                    <div>
-                        <small class="validation-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
-                            логин должен быть заполнен</small>
-                    </div>
-
-                    <label for="password"><b>Пароль</b></label>
-                    <input type="password" placeholder="Введите пароль" id="password" th:field="*{password}">
-                    <div>
-                        <small class="validation-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
-                            пароль должен быть заполнен и подоходить требованиям</small>
-                    </div>
-
-					<label for="roles">Roles</label>
-					<select multiple class="form-control" id="roles" th:field="*{roles}" required>
-						<option th:each="role : ${roles}"
-								th:text="${role.name}"
-								th:value="${role.id}"
-								th:selected="${user.roles?.contains(role)}"></option>
-					</select>
-
-                    <hr>
-                    <button type="submit" class="formButton">Сохранить</button>
-                </form>
-            </div>
+                <button type="submit" class="formButton">Сохранить</button>
+            </form>
+        </div>
 
     </div>
 </div>
