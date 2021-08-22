@@ -1,11 +1,8 @@
 package com.Turbo.Lms.validator;
 
 import com.Turbo.Lms.annotations.TitleCase;
-import com.Turbo.Lms.validator.TitleCaseValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 

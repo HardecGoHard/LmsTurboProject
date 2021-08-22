@@ -1,61 +1,69 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Регистрация</title>
-<meta name="keywords" content="">
-<meta name="description" content="">
-<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
-<link href="../static/default.css" rel="stylesheet" type="text/css" media="all">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Редактирование профиля</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link th:href="@{default.css}" rel="stylesheet">
 
 </head>
 <body>
-<div id="header-wrapper">
-	<div id="header" class="container">
-		<div id="logo">
-			<h1><span class="fa fa-bolt"></span><a href="index.html">Turbo LMS</a></h1>
-		</div>
-		<div id="menu">
-			<ul>
-				<li ><a href="index.html" accesskey="1" title="">Домашняя страница</a></li>
-				<li><a href="signIn.html" accesskey="2" title="">Войти</a></li>
-				<li class="current_page_item"><a href="registration.html" accesskey="3" title="">Регистрация</a></li>
-			</ul>
-		</div>
-	</div>
-</div>
-
+<header th:replace="fragments/header :: header"></header>
 <div id="wrapper">
-	<div id="featured-wrapper">
-		<form action="#">
-  	<div class="form">
-    <h1>Регистрация нового пользователя</h1>
-    <p>Пожалуйста, заполните поля, чтобы создать нового пользователя</p>
-    <hr>
+    <div id="featured-wrapper">
+        <form action="#">
+            <div class="form">
+                <h1>Регистрация нового пользователя</h1>
+                <p>Пожалуйста, заполните поля, чтобы создать нового пользователя</p>
+                <hr>
 
-    <label for="name"><b>Имя</b></label>
-    <input type="text" placeholder="Введите Имя" name="name" required>
+                <form th:object="${user}" th:method="post" th:action="@{/profile}">
+                    <input type="hidden" th:field="*{id}">
 
-    <label for="email"><b>Email</b></label>
-    <input type="text" placeholder="Введите Email" name="email" required>
+                    <label for="name"><b>Изменить логин</b></label>
+                    <input type="text" placeholder="Введите логин" th:field="*{username}" name="name" id="name">
+                    <div>
+                        <small class="validation-error" th:if="${#fields.hasErrors('username')}"
+                               th:errors="*{username}">
+                            логин должен быть заполнен</small>
+                    </div>
 
-    <label for="psw"><b>Пароль</b></label>
-    <input type="password" placeholder="Введите Password" name="psw" required>
+                    <label for="password"><b>Пароль</b></label>
+                    <input type="password" placeholder="Введите пароль" id="password" th:field="*{password}">
+                    <div>
+                        <small class="validation-error" th:if="${#fields.hasErrors('password')}"
+                               th:errors="*{password}">
+                            пароль должен быть заполнен и подоходить требованиям</small>
+                    </div>
+                    <label for="passwordConfirm"><b>Пароль</b></label>
+                    <input type="password" placeholder="Введите пароль" id="passwordConfirm"
+                           th:field="*{confirmPassword}">
+                    <div>
+                        <small class="validation-error" th:if="${#fields.hasErrors('')}" th:errors="*{confirmPassword}">
+                            пароль должен быть заполнен и подоходить требованиям</small>
+                    </div>
+                    <div th:if="${!passwordError.isEmpty()}">
+                        <small class="validation-error">пароли не совпадают</small>
+                    </div>
+                    <label for="email"><b>Email</b></label>
+                    <input type="email" placeholder="Введите email" id="email" th:field="*{email}">
+                    <div>
+                        <small class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                            email должен быть заполнен и подоходить требованиям</small>
+                    </div>
+                    <hr>
+                    <button type="submit" class="formButton">Сохранить</button>
+                </form>
+                <div class="container signin">
+                    <p>Уже есть аккаунт? <a href="login.html">Войти</a>.</p>
+                </div>
+        </form>
 
-    <label for="desc"><b>Описание</b></label>
-    <textarea placeholder="Добавьте Описание" name="desc"></textarea>
-    <hr>
-    <button type="submit" class="formButton">Зарегистрировать нового пользователя</button>
-  </div>
-
-  <div class="container signin">
-    <p>Уже есть аккаунт? <a href="signIn.html">Войти</a>.</p>
-  </div>
-</form>
-		
-	</div>
+    </div>
 </div>
 <div id="copyright" class="container">
-	<p>Turbo LMS</a>.</p>
+    <p>Turbo LMS</a>.</p>
 </div>
 
 </body>

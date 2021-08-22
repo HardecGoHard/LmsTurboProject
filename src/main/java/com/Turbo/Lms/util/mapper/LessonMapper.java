@@ -1,9 +1,6 @@
 package com.Turbo.Lms.util.mapper;
 
-import com.Turbo.Lms.dao.CourseRepository;
-import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.domain.Lesson;
-import com.Turbo.Lms.dto.CourseDto;
 import com.Turbo.Lms.dto.LessonDto;
 import org.springframework.stereotype.Service;
 

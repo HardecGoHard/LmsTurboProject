@@ -1,17 +1,15 @@
 package com.Turbo.Lms.dto;
 
 import com.Turbo.Lms.annotations.TitleCase;
-import com.Turbo.Lms.domain.Lesson;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 import java.util.Objects;
 
 public class CourseDto {
     private Long id;
     @NotBlank(message = "Автор курса должен быть заполнен")
     private String author;
+
     @TitleCase
     @NotBlank(message = "Название курса должно быть заполнено")
     private String title;

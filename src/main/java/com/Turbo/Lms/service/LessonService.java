@@ -6,10 +6,8 @@ import com.Turbo.Lms.dao.LessonRepository;
 import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.domain.Lesson;
 import com.Turbo.Lms.dto.LessonDto;
-import com.Turbo.Lms.util.mapper.CourseMapper;
 import com.Turbo.Lms.util.mapper.LessonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 

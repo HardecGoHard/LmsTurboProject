@@ -1,9 +1,6 @@
 package com.Turbo.Lms.domain;
 
-import com.Turbo.Lms.annotations.TitleCase;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -27,7 +24,8 @@ public class Course {
     @ManyToMany
     private Set<User> users;
 
-    @OneToOne(mappedBy = "course", cascade = CascadeType.REMOVE)
+
+    @OneToOne(mappedBy = "course", cascade = CascadeType.ALL)
     private CourseAvatarImage courseAvatarImage;
 
     public Course() {
@@ -76,6 +74,14 @@ public class Course {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    public CourseAvatarImage getCourseAvatarImage() {
+        return courseAvatarImage;
+    }
+
+    public void setCourseAvatarImage(CourseAvatarImage courseAvatarImage) {
+        this.courseAvatarImage = courseAvatarImage;
     }
 
     @Override

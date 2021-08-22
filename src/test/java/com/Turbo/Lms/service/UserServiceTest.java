@@ -9,10 +9,7 @@ import com.Turbo.Lms.util.mapper.UserMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
@@ -43,11 +40,13 @@ public class UserServiceTest {
                         1L,
                         "NAME1",
                         "hash",
+                        "email@gmail.com",
                         Set.of(ROLE_ADMIN)),
                 new User(
                         2L,
                         "NAME2",
                         "hash",
+                        "email2@gmail.com",
                         Set.of(ROLE_STUDENT))
         );
 
@@ -119,6 +118,7 @@ public class UserServiceTest {
         User newUser = new User(3L,
                 "NAME3",
                 "hash",
+                "email@gmail.com",
                 Set.of(ROLE_STUDENT));
         service.save(userMapper.toUserDto(newUser));
         Mockito.verify(userRepositoryMock, Mockito.times(1)).save(newUser);

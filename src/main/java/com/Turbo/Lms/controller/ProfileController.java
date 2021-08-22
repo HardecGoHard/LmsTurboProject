@@ -3,7 +3,7 @@ package com.Turbo.Lms.controller;
 
 import com.Turbo.Lms.Exceptions.InternalServerError;
 import com.Turbo.Lms.Exceptions.NotFoundException;
-import com.Turbo.Lms.service.AbstractAvatarStorageService;
+import com.Turbo.Lms.dto.UserDto;
 import com.Turbo.Lms.service.UserAvatarStorageService;
 import com.Turbo.Lms.service.UserService;
 import org.slf4j.Logger;
@@ -14,8 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/profile")
@@ -35,6 +38,15 @@ public class ProfileController {
         model.addAttribute("user", userService.findUserByUsername(auth.getName()));
         return "profile";
     }
+    @PostMapping
+    public String getUserProfile(@Valid @ModelAttribute("user") UserDto user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "profile";
+        }
+        userService.save(user);
+        return "redirect:/course";
+    }
+
 
     @PostMapping("/avatar/{userId}")
     public String updateAvatarImage(@PathVariable("userId") Long userId,

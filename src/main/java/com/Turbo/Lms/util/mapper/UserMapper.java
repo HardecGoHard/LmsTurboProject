@@ -21,6 +21,7 @@ public class UserMapper {
                user.getId(),
                user.getUsername(),
                "",
+               user.getEmail(),
                user.getRoles()
        );
     }
@@ -29,6 +30,7 @@ public class UserMapper {
                     userDto.getId(),
                     userDto.getUsername(),
                     encoder.encode(userDto.getPassword()),
+                    userDto.getEmail(),
                     userDto.getRoles()
             );
     }

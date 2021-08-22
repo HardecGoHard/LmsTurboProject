@@ -4,7 +4,6 @@ import com.Turbo.Lms.domain.Role;
 import com.Turbo.Lms.dto.UserDto;
 import com.Turbo.Lms.service.RoleService;
 import com.Turbo.Lms.service.RoleType;
-import com.Turbo.Lms.service.UserAuthService;
 import com.Turbo.Lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -48,7 +47,12 @@ public class UserController {
         model.addAttribute("user", new UserDto());
         return "user_form";
     }
-
+    @GetMapping("/registration")
+    public String showRegistrationForm(Model model) {
+        UserDto userDto = new UserDto();
+        model.addAttribute("user", userDto);
+        return "registration";
+    }
     @PostMapping
     public String submitUserForm(@Valid @ModelAttribute("user") UserDto user,
                                  BindingResult bindingResult) {

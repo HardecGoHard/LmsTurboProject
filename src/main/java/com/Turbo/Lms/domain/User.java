@@ -3,6 +3,7 @@ package com.Turbo.Lms.domain;
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -14,28 +15,34 @@ public class User {
     @Column
     private String username;
 
+    @Column
+    private String password;
+
+    @Column
+    private String email;
+
     @ManyToMany(mappedBy = "users")
     private Set<Course> courses;
 
     @ManyToMany()
     private Set<Role> roles;
 
-    @Column
-    private String password;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user")
     private UserAvatarImage userAvatarImage;
 
-    public User(Long id, String username, String password, Set<Role> roles) {
+    public User(Long id, String username, String password,String email, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.roles = roles;
+        this.email = email;
     }
-    public User(String username, String password, Set<Role> roles) {
+
+    public User(String username, String password, String email, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.roles = roles;
+        this.email = email;
     }
 
     public User() {
@@ -79,6 +86,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public UserAvatarImage getUserAvatarImage() {
+        return userAvatarImage;
+    }
+
+    public void setUserAvatarImage(UserAvatarImage userAvatarImage) {
+        this.userAvatarImage = userAvatarImage;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

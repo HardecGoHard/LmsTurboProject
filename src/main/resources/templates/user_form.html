@@ -42,6 +42,13 @@
                         пароль должен быть заполнен и подоходить требованиям</small>
                 </div>
 
+                <label for="email"><b>Email</b></label>
+                <input type="email" placeholder="Введите email" id="email" th:field="*{email}">
+                <div>
+                    <small class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                        email должен быть заполнен и подоходить требованиям</small>
+                </div>
+
                 <label for="roles">Roles</label>
                 <select multiple class="form-control" id="roles" th:field="*{roles}" required>
                     <option th:each="role : ${roles}"

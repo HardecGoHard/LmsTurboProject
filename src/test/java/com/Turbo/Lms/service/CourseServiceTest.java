@@ -44,7 +44,6 @@ public class CourseServiceTest {
         courseRepositoryMock = Mockito.mock(CourseRepository.class);
         userRepositoryMock = Mockito.mock(UserRepository.class);
         lessonRepositoryMock = Mockito.mock(LessonRepository.class);
-
         courseService = new CourseService(courseRepositoryMock, COURSE_MAPPER, lessonRepositoryMock, userRepositoryMock);
     }
 

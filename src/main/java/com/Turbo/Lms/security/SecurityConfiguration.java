@@ -15,7 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiguration {
 
     @Autowired
-    public void authConfigure(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder, UserAuthService userDetailService) throws Exception {
+    public void authConfigure(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder,
+                              UserAuthService userDetailService) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("student")
                 .password(passwordEncoder.encode("123"))
@@ -34,15 +35,21 @@ public class SecurityConfiguration {
         protected void configure(HttpSecurity http) throws Exception {
             http.
                     authorizeRequests()
-                    .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/").permitAll()
-                    .anyRequest().authenticated()
+                        .antMatchers("/admin/**").hasRole("ADMIN")
+                        .antMatchers("/", "/default.css").permitAll()
+                        .anyRequest().authenticated()
                     .and()
-                    .formLogin()
-                    .defaultSuccessUrl("/course")
+                        .formLogin()
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/course")
+                        .permitAll()
                     .and()
-                    .exceptionHandling()
-                    .accessDeniedPage("/access_denied");
+                        .logout()
+                        .permitAll()
+                    .and()
+                        .exceptionHandling()
+                        .accessDeniedPage("/access_denied");
         }
     }
 }
