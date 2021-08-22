@@ -155,7 +155,7 @@ a:hover
 }
 
 /* Full-width input fields */
-input[type=text], input[type=password], input[type=file], #selectvalue {
+input[type=text], input[type=password], input[type=file], input[type=email], #selectvalue {
   width: 100%;
   padding: 15px;
   margin: 5px 0 12px 0;
@@ -164,7 +164,7 @@ input[type=text], input[type=password], input[type=file], #selectvalue {
   background: #f1f1f1;
 }
 
-input[type=text]:focus, input[type=password]:focus,#selectvalue {
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, #selectvalue {
   background-color: #ddd;
   outline: none;
 }

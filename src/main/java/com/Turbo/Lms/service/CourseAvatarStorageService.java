@@ -4,22 +4,12 @@ import com.Turbo.Lms.dao.CourseAvatarImageRepository;
 import com.Turbo.Lms.dao.CourseRepository;
 import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.domain.CourseAvatarImage;
-import com.Turbo.Lms.domain.User;
-import com.Turbo.Lms.domain.UserAvatarImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Optional;
-import java.util.UUID;
-
-import static java.nio.file.StandardOpenOption.*;
 
 @Service
 public class CourseAvatarStorageService extends AbstractAvatarStorageService<CourseAvatarImage, Course>{

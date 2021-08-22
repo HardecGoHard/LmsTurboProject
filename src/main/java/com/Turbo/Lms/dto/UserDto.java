@@ -2,8 +2,6 @@ package com.Turbo.Lms.dto;
 
 import com.Turbo.Lms.domain.Role;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.Objects;
@@ -12,10 +10,18 @@ import java.util.Set;
 public class UserDto {
 
     private Long id;
+
     @NotBlank(message = "Имя пользователя должно быть заполнено")
     private String username;
+
     @NotBlank(message = "Пароль должен быть заполнен")
     private String password;
+
+    private String confirmPassword;
+
+    @NotBlank(message = "email должен быть заполнен")
+    @Pattern(regexp = "^([a-zA-Z\\d\\-\\.]+)@([a-z\\d\\-]+)\\.([a-z]{2,8})(\\.[a-z]{2,8})?$")
+    private String email;
 
     private Set<Role> roles;
 
@@ -23,10 +29,11 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(Long id, String username, String password, Set<Role> roles) {
+    public UserDto(Long id, String username, String password, String email, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.email = email;
         this.roles = roles;
     }
 
@@ -80,6 +87,22 @@ public class UserDto {
                 Objects.equals(username, userDto.username) &&
                 Objects.equals(password, userDto.password) &&
                 Objects.equals(roles, userDto.roles);
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.Turbo.Lms.service;
 
 import com.Turbo.Lms.dao.UserAvatarImageRepository;
 import com.Turbo.Lms.dao.UserRepository;
-import com.Turbo.Lms.domain.CourseAvatarImage;
 import com.Turbo.Lms.domain.UserAvatarImage;
 import com.Turbo.Lms.domain.User;
 import org.slf4j.Logger;
@@ -11,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Optional;
 
 @Service

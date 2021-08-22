@@ -1,25 +1,20 @@
 package com.Turbo.Lms.service;
 
 import com.Turbo.Lms.Exceptions.NotFoundException;
-import com.Turbo.Lms.dao.CourseRepository;
 import com.Turbo.Lms.dao.UserRepository;
-import com.Turbo.Lms.domain.Course;
-import com.Turbo.Lms.domain.User;
 import com.Turbo.Lms.dto.UserDto;
 import com.Turbo.Lms.util.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
 
     @Autowired
     public UserService(UserRepository userRepository, UserMapper userMapper) {
@@ -56,7 +51,6 @@ public class UserService {
     public List<UserDto> getUsersOfCourse(Long id) {
         return  userMapper.convertToDtoList(new ArrayList<>(userRepository.getUsersOfCourse(id)));
     }
-
 
     public UserDto findUserByUsername(String remoteUser) {
         return userRepository.findUserByUsername(remoteUser).map(userMapper::toUserDto)

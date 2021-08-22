@@ -40,6 +40,7 @@ public class UserControllerTest {
             1L,
             "NAME",
             "PASS",
+            "email@gmail.com",
             Set.of(ROLE_LIST.get(1))
     );
 
@@ -92,7 +93,7 @@ public class UserControllerTest {
     @WithMockUser(username = "user", roles = RoleType.ADMIN_WITHOUT_PREFIX)
     @Test
     void submitUserForm_Should_Return_ValidErrors() throws Exception {
-        UserDto errorValidUserDto = new UserDto(1L, "", "PASS", Set.of(new Role("ADMIN")));
+        UserDto errorValidUserDto = new UserDto(1L, "", "PASS", "email@gmail.com", Set.of(new Role("ADMIN")));
         mockMvc.perform(post("/admin/user").with(csrf())
                 .flashAttr("user", errorValidUserDto))
                 .andExpect(model().hasErrors())

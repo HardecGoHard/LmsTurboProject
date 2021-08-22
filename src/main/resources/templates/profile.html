@@ -25,7 +25,7 @@
             </form>
 
             <hr>
-            <form th:object="${user}" th:method="post" th:action="@{/admin/user}">
+            <form th:object="${user}" th:method="post" th:action="@{/profile}">
                 <input type="hidden" th:field="*{id}">
 
                 <label for="name"><b>Изменить логин</b></label>
@@ -40,6 +40,12 @@
                 <div>
                     <small class="validation-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
                         пароль должен быть заполнен и подоходить требованиям</small>
+                </div>
+                <label for="email"><b>Email</b></label>
+                <input type="email" placeholder="Введите email" id="email" th:field="*{email}">
+                <div>
+                    <small class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                        email должен быть заполнен и подоходить требованиям</small>
                 </div>
                 <hr>
                 <button type="submit" class="formButton">Сохранить</button>

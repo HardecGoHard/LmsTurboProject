@@ -3,12 +3,9 @@ package com.Turbo.Lms.service;
 import com.Turbo.Lms.Exceptions.NotFoundException;
 import com.Turbo.Lms.dao.CourseRepository;
 import com.Turbo.Lms.dao.LessonRepository;
-import com.Turbo.Lms.dao.UserRepository;
 import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.domain.Lesson;
-import com.Turbo.Lms.dto.CourseDto;
 import com.Turbo.Lms.dto.LessonDto;
-import com.Turbo.Lms.dto.UserDto;
 import com.Turbo.Lms.util.mapper.LessonMapper;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +13,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +34,10 @@ public class LessonServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        lessonList = List.of(new Lesson(1L, "TITLE", "TEXT", new Course()),
-                new Lesson(2L, "TITLE2", "TEXT2", new Course()));
+        lessonList = List.of(
+                new Lesson(1L, "TITLE", "TEXT", new Course()),
+                new Lesson(2L, "TITLE2", "TEXT2", new Course())
+        );
 
         lessonRepositoryMock = Mockito.mock(LessonRepository.class);
         courseRepositoryMock = Mockito.mock(CourseRepository.class);

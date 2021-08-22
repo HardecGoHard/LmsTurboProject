@@ -1,26 +1,19 @@
 package com.Turbo.Lms.controller;
 
-import com.Turbo.Lms.dao.CourseRepository;
-import com.Turbo.Lms.domain.Course;
-import com.Turbo.Lms.domain.User;
 import com.Turbo.Lms.dto.CourseDto;
 import com.Turbo.Lms.dto.UserDto;
-import com.Turbo.Lms.service.CourseService;
-import com.Turbo.Lms.service.LessonService;
-import com.Turbo.Lms.service.RoleType;
-import com.Turbo.Lms.service.UserService;
+import com.Turbo.Lms.service.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.access.SecurityConfig;
+
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -37,6 +30,9 @@ public class CourseControllerTest {
     private LessonService lessonService;
     @MockBean
     private UserService userService;
+    @MockBean
+    private CourseAvatarStorageService courseAvatarStorageServiceMock;
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -87,11 +83,13 @@ public class CourseControllerTest {
     @Test
     void submitCourseForm_Should_Return_True() throws Exception {
         CourseDto courseDto = new CourseDto(1L, "NAMEONE", "COURSE ONE");
+
         mockMvc.perform(post("/course").with(csrf())
                 .flashAttr("course", courseDto))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().hasNoErrors())
                 .andExpect(redirectedUrl("/course"));
+
         Mockito.verify(courseService, Mockito.times(1)).save(courseDto);
     }
 
@@ -104,6 +102,8 @@ public class CourseControllerTest {
                 .flashAttr("course", courseDto))
                 .andExpect(model().hasErrors())
                 .andExpect(view().name("form_course"));
+
+
         Mockito.verify(courseService, Mockito.times(0)).save(courseDto);
     }
 

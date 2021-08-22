@@ -62,8 +62,9 @@
                         </td>
                 </tr>
                 <form sec:authorize="hasRole('ADMIN')">
-                    <label><b><a name="course_id" th:href="@{../lesson/new(course_id = ${course.id})}">Новый
+                    <label><b><a name="course_id" th:href="@{../lesson/new(courseId = ${course.id})}">Новый
                         урок</a></b></label>
+                </form>
             </table>
 
             <label sec:authorize="hasRole('ADMIN')" for=><b>Пользователи связанные с этим курсом</b></label>
