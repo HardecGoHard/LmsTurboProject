@@ -21,12 +21,9 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class CourseServiceTest {
     private static CourseService courseService;
-
-
     private static List<Course> courseList;
 
     private static final CourseMapper COURSE_MAPPER = new CourseMapper();
-    ;
 
     private static CourseRepository courseRepositoryMock;
     private static UserRepository userRepositoryMock;
