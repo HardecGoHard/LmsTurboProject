@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.*;
 
@@ -18,11 +21,9 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class CourseServiceTest {
     private static CourseService courseService;
-
-
     private static List<Course> courseList;
 
-    private static final CourseMapper COURSE_MAPPER = new CourseMapper();;
+    private static final CourseMapper COURSE_MAPPER = new CourseMapper();
 
     private static CourseRepository courseRepositoryMock;
     private static UserRepository userRepositoryMock;
@@ -68,11 +69,13 @@ public class CourseServiceTest {
 
     @Test
     public void findByTitle_Should_Return_True() {
-        Mockito.when(courseRepositoryMock.findByTitleLike("")).thenReturn(courseList);
+        Mockito.when(courseRepositoryMock.findByTitleLike("", Pageable.unpaged()))
+                .thenReturn(new PageImpl<>(courseList));
 
-        List<CourseDto> allCourse = COURSE_MAPPER.convertToDtoList(courseRepositoryMock.findByTitleLike(""));
+        Page<CourseDto> allCourse = COURSE_MAPPER.convertToDtoList(courseRepositoryMock.findByTitleLike("",
+                Pageable.unpaged()));
 
-        assertThat(courseService.findByTitleLike("")).isEqualTo(allCourse);
+        assertThat(courseService.findByTitleLike("", Pageable.unpaged())).isEqualTo(allCourse);
     }
 
     @Test
