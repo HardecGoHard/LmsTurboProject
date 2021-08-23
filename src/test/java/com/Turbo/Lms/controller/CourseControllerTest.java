@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import org.springframework.data.domain.*;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -40,8 +41,9 @@ public class CourseControllerTest {
     @WithMockUser(username = "user", roles = RoleType.ADMIN_WITHOUT_PREFIX)
     @Test
     void courseTable_Admin_Should_Return_True() throws Exception {
-        List<CourseDto> courseDtoList = List.of(new CourseDto(1L, "NAME1", "TITLE1"));
-        Mockito.when(courseService.findByTitleLike("%")).thenReturn(courseDtoList);
+        Page<CourseDto> courseDtoList = new PageImpl<>(List.of(new CourseDto(1L, "NAME1", "TITLE1")));
+        Mockito.when(courseService.findByTitleLike("%", PageRequest.of(0, 3, Sort.by("id"))))
+                .thenReturn(courseDtoList);
         this.mockMvc.perform(
                 get("/course"))
                 .andExpect(status().isOk())
@@ -52,9 +54,10 @@ public class CourseControllerTest {
     @WithMockUser(username = "user", roles = RoleType.STUDENT_WITHOUT_PREFIX)
     @Test
     void courseTable_Student_Should_Return_True() throws Exception {
-        List<CourseDto> courseDtoList = List.of(new CourseDto(1L, "NAME1", "TITLE1"));
+        Page<CourseDto> courseDtoList = new PageImpl<>(List.of(new CourseDto(1L, "NAME1", "TITLE1")));
         Mockito.when(userService.findUserByUsername("user")).thenReturn(new UserDto(1L));
-        Mockito.when(courseService.findCoursesNotAssignToUser(1L, "%")).thenReturn(courseDtoList);
+        Mockito.when(courseService.findCoursesNotAssignToUser(1L, "%",
+                PageRequest.of(0, 3, Sort.by("id")))).thenReturn(courseDtoList);
         this.mockMvc.perform(
                 get("/course"))
                 .andExpect(status().isOk())

@@ -9,6 +9,8 @@ import com.Turbo.Lms.domain.User;
 import com.Turbo.Lms.dto.CourseDto;
 import com.Turbo.Lms.util.mapper.CourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,12 +54,12 @@ public class CourseService {
         courseRepository.delete(courseMapper.toCourseFromDto(courseDto));
     }
 
-    public List<CourseDto> findByTitleLike(String prefix) {
-        return courseMapper.convertToDtoList(courseRepository.findByTitleLike(prefix));
+    public Page<CourseDto> findByTitleLike(String prefix, Pageable pageable) {
+        return courseMapper.convertToDtoList(courseRepository.findByTitleLike(prefix, pageable));
     }
 
-    public List<CourseDto> findCoursesNotAssignToUser(Long userId, String title) {
-        return courseMapper.convertToDtoList(courseRepository.findCoursesByTitleNotAssignToUser(userId, title));
+    public Page<CourseDto> findCoursesNotAssignToUser(Long userId, String title, Pageable pageable) {
+        return courseMapper.convertToDtoList(courseRepository.findCoursesByTitleNotAssignToUser(userId, title, pageable));
     }
 
     public void assignUserById(Long id, Long courseId) {

@@ -61,6 +61,21 @@
                     <td colspan="4">No data</td>
                 </tr>
             </table>
+            <div th:if="${courses.totalPages > 0}">
+                <nav aria-label="navigation">
+                    <ul class="pagination" th:each="pageNumber : ${pageNumbers}">
+                        <li class="page-item">
+                            <th:block th:if="${courses.getNumber() != (pageNumber - 1)}">
+                                <a class="page-link" th:href="@{/course(page=${pageNumber - 1})}"
+                                   th:text="${pageNumber}">1</a>
+                            </th:block>
+                            <th:block th:if="${courses.getNumber() == (pageNumber - 1)}">
+                                <span th:text="${pageNumber}"></span>
+                            </th:block>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
             <div>
                 <a th:href="@{course/new}" sec:authorize="hasRole('ADMIN')">Добавить новый курс</a>
             </div>
