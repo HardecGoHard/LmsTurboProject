@@ -29,7 +29,7 @@ public class UserService {
     }
 
     public void delete(UserDto userDto) {
-        userRepository.delete(userMapper.toUserFromDto(userDto));
+        userRepository.delete(userRepository.findById(userDto.getId()).orElseThrow(() -> new NotFoundException("User not found!")));
     }
 
     public void save(UserDto userDto) {

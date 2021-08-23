@@ -49,7 +49,7 @@ public class CourseService {
     }
 
     public void delete(CourseDto courseDto) {
-        courseRepository.delete(courseMapper.toCourseFromDto(courseDto));
+        courseRepository.delete(courseRepository.findById(courseDto.getId()).orElseThrow(() -> new NotFoundException("Course not found!")));
     }
 
     public List<CourseDto> findByTitleLike(String prefix) {
