@@ -21,7 +21,7 @@ public class User {
     @Column
     private String email;
 
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users")
     private Set<Course> courses;
 
     @ManyToMany()
