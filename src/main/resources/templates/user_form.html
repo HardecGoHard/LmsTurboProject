@@ -16,7 +16,7 @@
         <div class="form">
             <h1>Профиль</h1>
 
-            <form th:object="${user}" th:method="post" th:action="@{/profile/avatar}">
+            <form th:object="${user}" th:method="post" th:action="@{/profile/avatar{id}(id = ${user.id})}">
                 <img src="../images/no_avatar.png" class="full_avatar">
                 <hr>
 

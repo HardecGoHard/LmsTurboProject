@@ -16,6 +16,9 @@
         <div class="form">
                 <h1 th:text="${course.title}"></h1>
                 <h4 sec:authorize="hasRole('STUDENT')" th:text="${course.author}"></h4>
+                <form  sec:authorize="hasRole('STUDENT')" th:method="post" th:action="@{/course/{id}/assign (id = ${course.id}, userId = ${user.id})}">
+                    <button th:hidden="${isEnrolled}" type="submit" class="TableButton">Записаться на курс</button>
+                </form>
 
             <img th:src="@{/course/{id}/avatar(id = ${course.id})}" alt="Course profile" class="full_avatar">
             <hr>

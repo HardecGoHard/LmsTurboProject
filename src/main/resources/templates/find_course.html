@@ -40,7 +40,7 @@
                     </td>
                     <td th:text="${course.author}"></td>
                     <td sec:authorize="hasRole('STUDENT')">
-                        <form th:method="post" th:action="@{/course/{id}/assign (id = ${course.id})}">
+                        <form th:method="get" th:action="@{/course/{id}(id = ${course.id})}">
                             <input type="hidden" name="userId" th:value="${user.id}">
                             <button type="submit" class="TableButton">Изучить</button>
                         </form>

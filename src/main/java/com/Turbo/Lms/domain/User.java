@@ -27,7 +27,7 @@ public class User {
     @ManyToMany()
     private Set<Role> roles;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private UserAvatarImage userAvatarImage;
 
     public User(Long id, String username, String password,String email, Set<Role> roles) {
