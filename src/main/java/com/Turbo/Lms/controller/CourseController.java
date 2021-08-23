@@ -15,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -73,12 +74,16 @@ public class CourseController {
         return "find_course";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping("/{courseId}")
-    public String courseForm(Model model, @PathVariable("courseId") Long courseId) {
+    public String courseForm(Model model, @PathVariable("courseId") Long courseId, HttpServletRequest request) {
         CourseDto course = courseService.findById(courseId);
+        UserDto userDto = userService.findUserByUsername(request.getRemoteUser());
         model.addAttribute("course", course);
         model.addAttribute("lessons", lessonService.findAllForLessonIdWithoutText(courseId));
         model.addAttribute("users", userService.getUsersOfCourse(courseId));
+        model.addAttribute("user", userDto);
+        model.addAttribute("isEnrolled", userService.isEnrolled(userDto.getId(), courseId));
         return "form_course";
     }
 
