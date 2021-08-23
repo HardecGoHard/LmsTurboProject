@@ -1,6 +1,7 @@
 package com.Turbo.Lms.service;
 
 import com.Turbo.Lms.Exceptions.NotFoundException;
+import com.Turbo.Lms.dao.RoleRepositorty;
 import com.Turbo.Lms.dao.UserRepository;
 import com.Turbo.Lms.domain.Role;
 import com.Turbo.Lms.domain.User;
@@ -25,6 +26,7 @@ public class UserServiceTest {
 
     private static UserRepository userRepositoryMock;
     private static PasswordEncoder passwordEncoderMock;
+    private static RoleRepositorty roleRepositortyMock;
 
     private static final Role ROLE_ADMIN = new Role("ROLE_ADMIN");
     private static final Role ROLE_STUDENT = new Role("ROLE_STUDENT");
@@ -52,12 +54,12 @@ public class UserServiceTest {
 
         passwordEncoderMock = Mockito.mock(PasswordEncoder.class);
         userRepositoryMock = Mockito.mock(UserRepository.class);
-
+        roleRepositortyMock = Mockito.mock(RoleRepositorty.class);
         Mockito.when(passwordEncoderMock.encode(anyString())).thenReturn("hash");
 
         userMapper = new UserMapper(passwordEncoderMock);
 
-        service = new UserService(userRepositoryMock, userMapper);
+        service = new UserService(userRepositoryMock, userMapper, roleRepositortyMock);
     }
 
     @Test

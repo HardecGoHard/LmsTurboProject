@@ -5,6 +5,8 @@ import com.Turbo.Lms.dto.UserDto;
 import com.Turbo.Lms.service.RoleService;
 import com.Turbo.Lms.service.RoleType;
 import com.Turbo.Lms.service.UserService;
+import com.Turbo.Lms.util.ControllerUtils;
+import com.Turbo.Lms.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Secured(RoleType.ADMIN)
@@ -21,11 +24,13 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final RoleService roleService;
+    private final UserValidator userValidator;
 
     @Autowired
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService, RoleService roleService, UserValidator userValidator) {
         this.userService = userService;
         this.roleService = roleService;
+        this.userValidator = userValidator;
     }
 
     @GetMapping
@@ -47,16 +52,22 @@ public class UserController {
         model.addAttribute("user", new UserDto());
         return "user_form";
     }
+
     @GetMapping("/registration")
     public String showRegistrationForm(Model model) {
         UserDto userDto = new UserDto();
         model.addAttribute("user", userDto);
         return "registration";
     }
+
     @PostMapping
     public String submitUserForm(@Valid @ModelAttribute("user") UserDto user,
-                                 BindingResult bindingResult) {
+                                 BindingResult bindingResult, Model model) {
+
+        userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ControllerUtils.getErros(bindingResult);
+            model.addAllAttributes(errorsMap);
             return "user_form";
         }
         userService.save(user);
