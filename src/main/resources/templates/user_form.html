@@ -31,8 +31,10 @@
                 <label for="name"><b>Изменить логин</b></label>
                 <input type="text" placeholder="Введите логин" th:field="*{username}" name="name" id="name">
                 <div>
-                    <small class="validation-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
-                        логин должен быть заполнен</small>
+                    <small class="validation-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
+                </div>
+                <div>
+                    <small class="validation-error" th:if="${usernameError != null}"  th:text="${usernameError}"></small>
                 </div>
 
                 <label for="password"><b>Пароль</b></label>
@@ -42,11 +44,19 @@
                         пароль должен быть заполнен и подоходить требованиям</small>
                 </div>
 
+                <label for="confirmPassword"><b>Повторите Пароль</b></label>
+                <input type="password"  placeholder="Повторите пароль" id="confirmPassword" th:field="*{confirmPassword}">
+                <div>
+                    <small class="validation-error" th:if="${confirmPasswordError != null}"  th:text="${confirmPasswordError}"></small>
+                </div>
+
                 <label for="email"><b>Email</b></label>
                 <input type="email" placeholder="Введите email" id="email" th:field="*{email}">
                 <div>
-                    <small class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-                        email должен быть заполнен и подоходить требованиям</small>
+                    <small class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                </div>
+                <div>
+                    <small class="validation-error" th:if="${emailError != null}"  th:text="${emailError}"></small>
                 </div>
 
                 <label for="roles">Roles</label>

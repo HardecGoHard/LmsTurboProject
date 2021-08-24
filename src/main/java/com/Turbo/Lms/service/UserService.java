@@ -1,7 +1,9 @@
 package com.Turbo.Lms.service;
 
 import com.Turbo.Lms.Exceptions.NotFoundException;
+import com.Turbo.Lms.dao.RoleRepositorty;
 import com.Turbo.Lms.dao.UserRepository;
+import com.Turbo.Lms.domain.Role;
 import com.Turbo.Lms.domain.User;
 import com.Turbo.Lms.dto.UserDto;
 import com.Turbo.Lms.util.mapper.UserMapper;
@@ -11,17 +13,20 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final RoleRepositorty roleRepositorty;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper,RoleRepositorty roleRepositorty) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.roleRepositorty = roleRepositorty;
     }
 
     public List<UserDto> findAll() {
@@ -57,11 +62,22 @@ public class UserService {
     }
 
     public List<UserDto> getUsersOfCourse(Long id) {
-        return  userMapper.convertToDtoList(new ArrayList<>(userRepository.getUsersOfCourse(id)));
+        return userMapper.convertToDtoList(new ArrayList<>(userRepository.getUsersOfCourse(id)));
+    }
+
+    public UserDto findUserByEmail(String email) {
+        Optional<User> user = userRepository.findUserByEmail(email);
+        return user.map(userMapper::toUserDto).orElse(null);
+    }
+
+    public void registerUser(UserDto userDto) {
+        Set<Role> roles = Set.of(roleRepositorty.findRoleByName(RoleType.STUDENT).get());
+        userDto.setRoles(roles);
+        save(userDto);
     }
 
     public UserDto findUserByUsername(String remoteUser) {
-        return userRepository.findUserByUsername(remoteUser).map(userMapper::toUserDto)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        Optional<User> user = userRepository.findUserByUsername(remoteUser);
+        return user.map(userMapper::toUserDto).orElse(null);
     }
 }

@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
     @Query("from User u " +
             "where u.id not in ( " +
             "select u.id " +
@@ -34,5 +34,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findIfUserIsEnrolledOnCourse(@Param("userId") Long userId, @Param("courseId") Long courseId);
 
     Optional<User> findUserByUsername(String username);
+
     List<User> findByUsernameLike(String username);
+
+    Optional<User> findUserByEmail(String email);
+
 }

@@ -6,6 +6,8 @@ import com.Turbo.Lms.Exceptions.NotFoundException;
 import com.Turbo.Lms.dto.UserDto;
 import com.Turbo.Lms.service.UserAvatarStorageService;
 import com.Turbo.Lms.service.UserService;
+import com.Turbo.Lms.util.ControllerUtils;
+import com.Turbo.Lms.validator.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +21,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
-    private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
-    private  UserAvatarStorageService userAvatarStorageService;
+    private final UserService userService;
+    private final UserValidator userValidator;
+    private final UserAvatarStorageService userAvatarStorageService;
 
     @Autowired
-    public ProfileController(UserService userService, UserAvatarStorageService userAvatarStorageService) {
+    public ProfileController(UserService userService, UserValidator userValidator, UserAvatarStorageService userAvatarStorageService) {
         this.userService = userService;
+        this.userValidator = userValidator;
         this.userAvatarStorageService = userAvatarStorageService;
     }
 
@@ -38,9 +43,21 @@ public class ProfileController {
         model.addAttribute("user", userService.findUserByUsername(auth.getName()));
         return "profile";
     }
+
     @PostMapping
-    public String getUserProfile(@Valid @ModelAttribute("user") UserDto user, BindingResult bindingResult) {
+    public String getUserProfile(@Valid @ModelAttribute("user") UserDto user,
+                                 BindingResult bindingResult, Authentication auth, Model model) {
+       /*
+        Так как в профиле в целях безопасности нет поля для выбора роли и убрано hiiden поле id,
+        то тянем из бд залогиненого пользователя и назначаем его роли и айди
+        */
+        UserDto userAuth = userService.findUserByUsername(auth.getName());
+        user.setId(userAuth.getId());
+        user.setRoles(userAuth.getRoles());
+        userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ControllerUtils.getErros(bindingResult);
+            model.addAllAttributes(errorsMap);
             return "profile";
         }
         userService.save(user);
@@ -60,9 +77,10 @@ public class ProfileController {
         }
         return "redirect:/profile";
     }
+
     @GetMapping("/avatar/{userId}")
     @ResponseBody
-    public ResponseEntity<byte[]> avatarImage(@PathVariable("userId") Long userId)  {
+    public ResponseEntity<byte[]> avatarImage(@PathVariable("userId") Long userId) {
         String contentType = userAvatarStorageService.getContentTypeByEntity(userId)
                 .orElseThrow(() -> new NotFoundException("Аватар не найден"));
         byte[] data = userAvatarStorageService.getAvatarImageByEntity(userId)
