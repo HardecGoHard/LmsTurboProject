@@ -25,6 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "where c.id = :courseId")
     Set<User> getUsersOfCourse(@Param("courseId") long courseId);
 
+
     @Query(" from User u " +
             "where u.id in " +
             "(select u.id " +

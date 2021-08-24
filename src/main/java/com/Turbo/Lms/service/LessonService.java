@@ -2,6 +2,7 @@ package com.Turbo.Lms.service;
 
 import com.Turbo.Lms.Exceptions.NotFoundException;
 import com.Turbo.Lms.dao.CourseRepository;
+import com.Turbo.Lms.dao.LessonCompletionRepository;
 import com.Turbo.Lms.dao.LessonRepository;
 import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.domain.Lesson;

@@ -29,4 +29,12 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "where u.id = :userId) and c.title like :title")
     Page<Course> findCoursesByTitleNotAssignToUser(@Param("userId") long userId, @Param("title") String title,
                                                    Pageable pageable);
+
+    @Query("from Course c " +
+            "where c.id in ( " +
+            "select c.id " +
+            "from Course c " +
+            "left join c.users u " +
+            "where u.id = :userId)")
+    Page<Course> findCoursesAssignedToUser(@Param("userId") long userId, Pageable pageable);
 }

@@ -14,6 +14,27 @@
 <div id="wrapper">
     <div id="featured-wrapper">
         <div class="form">
+            <h1>Изучаемые курсы</h1>
+        <table class="table-form">
+            <tr>
+                <th>id</th>
+                <th>Название</th>
+                <th>Автор</th>
+            </tr>
+            <tr th:unless="${courses.empty}" th:each="course : ${courses}">
+
+                <td th:text="${course.id}">1</td>
+                <td>
+                    <a th:text="${course.title}" th:href="@{/course/{id}(id = ${course.id})}"></a>
+                </td>
+                <td th:text="${course.author}"></td>
+            </tr>
+            <tr th:if="${courses.empty}">
+                <td colspan="4">No data</td>
+            </tr>
+        </table>
+        </div>
+        <div class="form">
             <h1>Редактирование профиля</h1>
             <img th:src="@{/profile/avatar/{id}(id = ${user.id})}" alt="User profile" class="full_avatar">
             <hr>
@@ -63,6 +84,7 @@
                 <button type="submit" class="formButton">Сохранить</button>
             </form>
         </div>
+
 
     </div>
 </div>

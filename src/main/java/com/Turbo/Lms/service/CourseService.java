@@ -62,6 +62,10 @@ public class CourseService {
         return courseMapper.convertToDtoList(courseRepository.findCoursesByTitleNotAssignToUser(userId, title, pageable));
     }
 
+    public Page<CourseDto> findCoursesAssignedToUser(Long userId, Pageable pageable){
+        return courseMapper.convertToDtoList(courseRepository.findCoursesAssignedToUser(userId, pageable));
+    }
+
     public void assignUserById(Long id, Long courseId) {
         userToCourse(id, courseId, false);
     }
