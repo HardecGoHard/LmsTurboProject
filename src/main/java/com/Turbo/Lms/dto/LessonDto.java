@@ -5,13 +5,13 @@ import java.util.Objects;
 
 public class LessonDto {
 
-    private Long id;
+    protected Long id;
     @NotBlank(message = "Название урока должно быть заполнено")
-    private String title;
+    protected String title;
     @NotBlank(message = "Описание урока должно быть заполнено")
-    private String text;
+    protected String text;
 
-    private Long courseId;
+    protected Long courseId;
 
     public LessonDto() {
     }

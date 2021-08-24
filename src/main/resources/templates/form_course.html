@@ -53,11 +53,11 @@
                     <td>Название</td>
                     <td sec:authorize="hasRole('ADMIN')">Действие</td>
                 </tr>
-                <tr th:each="lesson : ${lessons}">
+                <tr th:each="lesson : ${lessons}" th:style="${lesson.completion} ? 'background:green' : 'background:white'">
                     <td th:text="${lesson.id}"></td>
                     <td>
                         <a th:text="${lesson.title}" th:href="@{/lesson/{id}(id = ${lesson.id})}"></a>
-                    </td >
+                    </td>
                         <td sec:authorize="hasRole('ADMIN')">
                             <form th:method="delete" th:action="@{/lesson/{id}(id = ${lesson.id})}">
                             <button type="submit" class="TableButton">Удалить</button>

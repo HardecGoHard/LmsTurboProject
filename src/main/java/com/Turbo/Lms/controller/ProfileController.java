@@ -4,6 +4,7 @@ package com.Turbo.Lms.controller;
 import com.Turbo.Lms.Exceptions.InternalServerError;
 import com.Turbo.Lms.Exceptions.NotFoundException;
 import com.Turbo.Lms.dto.UserDto;
+import com.Turbo.Lms.service.CourseService;
 import com.Turbo.Lms.service.UserAvatarStorageService;
 import com.Turbo.Lms.service.UserService;
 import com.Turbo.Lms.util.ControllerUtils;
@@ -11,6 +12,8 @@ import com.Turbo.Lms.validator.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -27,20 +30,25 @@ import java.util.Map;
 @RequestMapping("/profile")
 public class ProfileController {
     private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
+    private final CourseService courseService;
     private final UserService userService;
     private final UserValidator userValidator;
     private final UserAvatarStorageService userAvatarStorageService;
 
     @Autowired
-    public ProfileController(UserService userService, UserValidator userValidator, UserAvatarStorageService userAvatarStorageService) {
+    public ProfileController(UserService userService, UserValidator userValidator, UserAvatarStorageService userAvatarStorageService,
+                             CourseService courseService) {
         this.userService = userService;
         this.userValidator = userValidator;
         this.userAvatarStorageService = userAvatarStorageService;
+        this.courseService = courseService;
     }
 
     @GetMapping
-    public String getUserProfile(Model model, Authentication auth) {
-        model.addAttribute("user", userService.findUserByUsername(auth.getName()));
+    public String getUserProfile(Model model, Authentication auth, @PageableDefault(sort = "id", size = 3) Pageable pageable) {
+        UserDto userDto = userService.findUserByUsername(auth.getName());
+        model.addAttribute("courses", courseService.findCoursesAssignedToUser(userDto.getId(), pageable));
+        model.addAttribute("user", userDto);
         return "profile";
     }
 
