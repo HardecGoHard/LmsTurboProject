@@ -16,11 +16,11 @@
         <div class="form">
             <h1>Профиль</h1>
 
-            <form th:object="${user}" th:method="post" th:action="@{/profile/avatar/{id}(id = ${user.id})}">
-                <img src="../images/no_avatar.png" class="full_avatar">
+            <form th:object="${user}" th:method="post" th:action="@{/profile/avatar/{id}(id = ${user.id})}" enctype="multipart/form-data">
+                <img th:src="@{/profile/avatar/{id}(id = ${user.id})}" alt="User profile" class="full_avatar">
                 <hr>
 
-                <input type="file" name="f">
+                <input id="avatar" name="avatar" type="file">
                 <button type="submit" class="formButton">Обновить</button>
             </form>
 

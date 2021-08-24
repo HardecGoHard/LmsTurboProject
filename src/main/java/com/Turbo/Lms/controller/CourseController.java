@@ -9,9 +9,13 @@ import com.Turbo.Lms.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/course")
@@ -38,35 +45,51 @@ public class CourseController {
         this.courseAvatarStorageService = courseAvatarStorageService;
     }
 
-    @GetMapping
+    @GetMapping()
     public String courseTable(Model model, @RequestParam(name = "titlePrefix", required = false) String titlePrefix,
+                              @PageableDefault(sort = "id", size = 3) Pageable pageable,
                               HttpServletRequest request) {
         model.addAttribute("activePage", "courses");
         String title = titlePrefix == null ? "%" : titlePrefix + "%";
         //если роль пользователя админ, то передаем модели список всех курсов.
+        Page<CourseDto> courseDtos;
         if (request.isUserInRole("ROLE_ADMIN")) {
-            model.addAttribute("courses", courseService.findByTitleLike(title));
+            courseDtos = courseService.findByTitleLike(title, pageable);
+            model.addAttribute("courses", courseDtos);
             //если роль пользователя студент, то передаем модели список всех курсов на которые студент ещё не записан.
         } else {
             UserDto userDto = userService.findUserByUsername(request.getRemoteUser());
-            model.addAttribute("courses", courseService.findCoursesNotAssignToUser(userDto.getId(), title));
+            courseDtos = courseService.findCoursesNotAssignToUser(userDto.getId(), title,
+                    pageable);
+            model.addAttribute("courses", courseDtos);
             model.addAttribute("user", userDto);
+        }
+        int totalPages = courseDtos.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
         }
         return "find_course";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping("/{courseId}")
-    public String courseForm(Model model, @PathVariable("courseId") Long courseId) {
+    public String courseForm(Model model, @PathVariable("courseId") Long courseId, HttpServletRequest request) {
         CourseDto course = courseService.findById(courseId);
+        UserDto userDto = userService.findUserByUsername(request.getRemoteUser());
         model.addAttribute("course", course);
         model.addAttribute("lessons", lessonService.findAllForLessonIdWithoutText(courseId));
         model.addAttribute("users", userService.getUsersOfCourse(courseId));
+        model.addAttribute("user", userDto);
+        model.addAttribute("isEnrolled", userService.isEnrolled(userDto.getId(), courseId));
         return "form_course";
     }
 
     @Secured(RoleType.ADMIN)
     @PostMapping
-    public String submitCourseForm(@Valid @ModelAttribute("course") CourseDto course, BindingResult bindingResult ) {
+    public String submitCourseForm(@Valid @ModelAttribute("course") CourseDto course, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "form_course";
         }
@@ -123,8 +146,9 @@ public class CourseController {
             logger.info("", ex);
             throw new InternalServerError();
         }
-        return "redirect:/course/"+courseId;
+        return "redirect:/course/" + courseId;
     }
+
     @GetMapping("/{courseId}/avatar")
     @ResponseBody
     public ResponseEntity<byte[]> avatarImage(@PathVariable("courseId") Long courseId) {

@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public void delete(UserDto userDto) {
-        userRepository.deleteById(userDto.getId());
+        userRepository.delete(userRepository.findById(userDto.getId()).orElseThrow(() -> new NotFoundException("User not found!")));
     }
 
     public void save(UserDto userDto) {
@@ -46,6 +46,12 @@ public class UserService {
                 .map(userMapper::toUserDto)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
+
+    public boolean isEnrolled(Long userId, Long courseId){
+        Optional<User> user = userRepository.findIfUserIsEnrolledOnCourse(userId, courseId);
+        return user.isPresent();
+    }
+
 
     public List<UserDto> findUsersNotAssignedToCourse(Long courseId) {
         return userMapper.convertToDtoList(userRepository.findUsersNotAssignedToCourse(courseId));
