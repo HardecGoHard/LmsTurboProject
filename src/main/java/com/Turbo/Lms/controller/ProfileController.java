@@ -26,10 +26,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
+    private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
     private final UserService userService;
     private final UserValidator userValidator;
-    private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
-    private UserAvatarStorageService userAvatarStorageService;
+    private final UserAvatarStorageService userAvatarStorageService;
 
     @Autowired
     public ProfileController(UserService userService, UserValidator userValidator, UserAvatarStorageService userAvatarStorageService) {
