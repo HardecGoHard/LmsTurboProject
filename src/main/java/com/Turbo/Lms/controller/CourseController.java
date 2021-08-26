@@ -106,7 +106,9 @@ public class CourseController {
         model.addAttribute("lessons", lessonsWithCompletions);
         model.addAttribute("users", userService.getUsersOfCourse(courseId));
         model.addAttribute("user", userDto);
-        model.addAttribute("isEnrolled", userService.isEnrolled(userDto.getId(), courseId));
+        if (userDto != null) {
+            model.addAttribute("isEnrolled", userService.isEnrolled(userDto.getId(), courseId));
+        }
         return "form_course";
     }
 
