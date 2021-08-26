@@ -89,7 +89,7 @@ public class CourseServiceTest {
 
     @Test
     public void findById_Should_Return_NotFoundException() {
-        Mockito.when(courseRepositoryMock.findById(50L)).thenThrow(NotFoundException.class);
+        Mockito.when(courseRepositoryMock.findById(INCORRECT_COURSE_ID)).thenThrow(NotFoundException.class);
         Assertions.assertThrows(NotFoundException.class, () -> {
             courseService.findById(INCORRECT_COURSE_ID);
         });
@@ -97,8 +97,10 @@ public class CourseServiceTest {
 
     @Test
     public void delete_Should_Return_True() {
-        courseService.delete(COURSE_MAPPER.toCourseDto(courseList.get(1)));
-        Mockito.verify(courseRepositoryMock, Mockito.times(1)).delete(courseList.get(1));
+        Mockito.when(courseRepositoryMock.findById(courseList.get(0).getId()))
+                .thenReturn(Optional.ofNullable(courseList.get(0)));
+        courseService.delete(COURSE_MAPPER.toCourseDto(courseList.get(0)));
+        Mockito.verify(courseRepositoryMock, Mockito.times(1)).delete(courseList.get(0));
     }
 
     @Test

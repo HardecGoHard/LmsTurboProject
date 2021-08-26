@@ -46,7 +46,8 @@ public class UserService {
     }
 
     public void delete(UserDto userDto) {
-        userRepository.delete(userRepository.findById(userDto.getId()).orElseThrow(() -> new NotFoundException("User not found!")));
+        userRepository.delete(userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new NotFoundException("User not found!")));
     }
 
     public void save(UserDto userDto) {
