@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -37,7 +39,8 @@ public class CourseController {
     private final CourseAvatarStorageService courseAvatarStorageService;
 
     @Autowired
-    public CourseController(CourseService courseService, UserService userService, LessonService lessonService, CourseAvatarStorageService courseAvatarStorageService) {
+    public CourseController(CourseService courseService, UserService userService, LessonService lessonService,
+                            CourseAvatarStorageService courseAvatarStorageService) {
         this.courseService = courseService;
         this.userService = userService;
         this.lessonService = lessonService;
@@ -69,6 +72,15 @@ public class CourseController {
                     .boxed()
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
+        }
+        Sort sort = pageable.getSort();
+        if (sort.isSorted()) {
+            Sort.Order order = sort.stream().filter(Objects::nonNull).findFirst()
+                    .orElseThrow(() -> new NotFoundException("Что-то пошло не так"));
+            model.addAttribute("sortField", order.getProperty());
+            model.addAttribute("isAscending", order.isAscending());
+            model.addAttribute("sortString",
+                    String.format("%s,%s", order.getProperty(), order.isAscending() ? "asc" : "desc"));
         }
         return "find_course";
     }
