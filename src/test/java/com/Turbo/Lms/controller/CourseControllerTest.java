@@ -34,6 +34,9 @@ public class CourseControllerTest {
     private UserService userService;
     @MockBean
     private CourseAvatarStorageService courseAvatarStorageServiceMock;
+    @MockBean
+    private  LessonCompletionService lessonCompletionServiceMock;
+
 
 
     @Autowired
