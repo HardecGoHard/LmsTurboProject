@@ -12,59 +12,57 @@
 <header th:replace="fragments/header :: header"></header>
 <div id="wrapper">
     <div id="featured-wrapper">
-        <form action="#">
-            <div class="form">
-                <h1>Регистрация нового пользователя</h1>
-                <p>Пожалуйста, заполните поля, чтобы создать нового пользователя</p>
-                <hr>
+        <div class="form">
+            <h1>Регистрация нового пользователя</h1>
+            <p>Пожалуйста, заполните поля, чтобы создать нового пользователя</p>
+            <hr>
 
-                <form th:object="${user}" th:method="post" th:action="@{/profile}">
-                    <input type="hidden" th:field="*{id}">
+            <form th:object="${user}" th:method="post" th:action="@{/registration}">
 
-                    <label for="name"><b>Изменить логин</b></label>
-                    <input type="text" placeholder="Введите логин" th:field="*{username}" name="name" id="name">
-                    <div>
-                        <small class="validation-error" th:if="${#fields.hasErrors('username')}"
-                               th:errors="*{username}">
-                            логин должен быть заполнен</small>
-                    </div>
-
-                    <label for="password"><b>Пароль</b></label>
-                    <input type="password" placeholder="Введите пароль" id="password" th:field="*{password}">
-                    <div>
-                        <small class="validation-error" th:if="${#fields.hasErrors('password')}"
-                               th:errors="*{password}">
-                            пароль должен быть заполнен и подоходить требованиям</small>
-                    </div>
-                    <label for="passwordConfirm"><b>Пароль</b></label>
-                    <input type="password" placeholder="Введите пароль" id="passwordConfirm"
-                           th:field="*{confirmPassword}">
-                    <div>
-                        <small class="validation-error" th:if="${#fields.hasErrors('')}" th:errors="*{confirmPassword}">
-                            пароль должен быть заполнен и подоходить требованиям</small>
-                    </div>
-                    <div th:if="${!passwordError.isEmpty()}">
-                        <small class="validation-error">пароли не совпадают</small>
-                    </div>
-                    <label for="email"><b>Email</b></label>
-                    <input type="email" placeholder="Введите email" id="email" th:field="*{email}">
-                    <div>
-                        <small class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-                            email должен быть заполнен и подоходить требованиям</small>
-                    </div>
-                    <hr>
-                    <button type="submit" class="formButton">Сохранить</button>
-                </form>
-                <div class="container signin">
-                    <p>Уже есть аккаунт? <a href="login.html">Войти</a>.</p>
+                <label for="name"><b>Логин</b></label>
+                <input type="text" placeholder="Введите логин" th:field="*{username}" name="name" id="name">
+                <div>
+                    <small class="validation-error" th:if="${#fields.hasErrors('username')}"
+                           th:errors="*{username}"></small>
                 </div>
-        </form>
+                <div>
+                    <small class="validation-error" th:if="${usernameError != null}" th:text="${usernameError}"></small>
+                </div>
 
+                <label for="password"><b>Пароль</b></label>
+                <input type="password" placeholder="Введите пароль" id="password" th:field="*{password}">
+                <div>
+                    <small class="validation-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                        пароль должен быть заполнен и подоходить требованиям</small>
+                </div>
+
+                <label for="confirmPassword"><b>Повторите Пароль</b></label>
+                <input type="password" placeholder="Повторите пароль" id="confirmPassword"
+                       th:field="*{confirmPassword}">
+                <div>
+                    <small class="validation-error" th:if="${confirmPasswordError != null}"
+                           th:text="${confirmPasswordError}"></small>
+                </div>
+
+                <label for="email"><b>Email</b></label>
+                <input type="email" placeholder="Введите email" id="email" th:field="*{email}">
+                <div>
+                    <small class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                </div>
+                <div>
+                    <small class="validation-error" th:if="${emailError != null}" th:text="${emailError}"></small>
+                </div>
+                <button type="submit" class="formButton">Сохранить</button>
+            </form>
+            <div class="signin">
+                <p>Уже есть аккаунт? <a th:href="@{/login}">Войти</a>.</p>
+            </div>
+
+        </div>
     </div>
-</div>
-<div id="copyright" class="container">
-    <p>Turbo LMS</a>.</p>
-</div>
+    <div id="copyright" class="container">
+        <p>Turbo LMS</a>.</p>
+    </div>
 
 </body>
 </html>

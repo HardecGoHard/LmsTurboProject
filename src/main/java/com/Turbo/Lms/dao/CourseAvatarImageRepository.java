@@ -2,9 +2,11 @@ package com.Turbo.Lms.dao;
 
 import com.Turbo.Lms.domain.CourseAvatarImage;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface CourseAvatarImageRepository extends JpaRepository<CourseAvatarImage, Long> {
     Optional<CourseAvatarImage> findByCourse_Id(Long courseId);
 }

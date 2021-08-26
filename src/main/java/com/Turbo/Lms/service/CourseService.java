@@ -51,7 +51,7 @@ public class CourseService {
     }
 
     public void delete(CourseDto courseDto) {
-        courseRepository.delete(courseMapper.toCourseFromDto(courseDto));
+        courseRepository.delete(courseRepository.findById(courseDto.getId()).orElseThrow(() -> new NotFoundException("Course not found!")));
     }
 
     public Page<CourseDto> findByTitleLike(String prefix, Pageable pageable) {
@@ -60,6 +60,10 @@ public class CourseService {
 
     public Page<CourseDto> findCoursesNotAssignToUser(Long userId, String title, Pageable pageable) {
         return courseMapper.convertToDtoList(courseRepository.findCoursesByTitleNotAssignToUser(userId, title, pageable));
+    }
+
+    public Page<CourseDto> findCoursesAssignedToUser(Long userId, Pageable pageable){
+        return courseMapper.convertToDtoList(courseRepository.findCoursesAssignedToUser(userId, pageable));
     }
 
     public void assignUserById(Long id, Long courseId) {

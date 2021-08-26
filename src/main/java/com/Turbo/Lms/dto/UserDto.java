@@ -2,25 +2,27 @@ package com.Turbo.Lms.dto;
 
 import com.Turbo.Lms.domain.Role;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.Set;
 
 public class UserDto {
 
     private Long id;
-
+    @Size(min = 4, max = 25, message = "Длина должна быть от 4 до 25")
     @NotBlank(message = "Имя пользователя должно быть заполнено")
     private String username;
-
+    @Size(min = 8, message = "Длина пароля должна быть от 4 до 25")
     @NotBlank(message = "Пароль должен быть заполнен")
     private String password;
 
     private String confirmPassword;
 
     @NotBlank(message = "email должен быть заполнен")
-    @Pattern(regexp = "^([a-zA-Z\\d\\-\\.]+)@([a-z\\d\\-]+)\\.([a-z]{2,8})(\\.[a-z]{2,8})?$")
+    @Email
     private String email;
 
     private Set<Role> roles;

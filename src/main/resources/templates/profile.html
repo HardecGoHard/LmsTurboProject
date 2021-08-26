@@ -14,6 +14,27 @@
 <div id="wrapper">
     <div id="featured-wrapper">
         <div class="form">
+            <h1>Изучаемые курсы</h1>
+        <table class="table-form">
+            <tr>
+                <th>id</th>
+                <th>Название</th>
+                <th>Автор</th>
+            </tr>
+            <tr th:unless="${courses.empty}" th:each="course : ${courses}">
+
+                <td th:text="${course.id}">1</td>
+                <td>
+                    <a th:text="${course.title}" th:href="@{/course/{id}(id = ${course.id})}"></a>
+                </td>
+                <td th:text="${course.author}"></td>
+            </tr>
+            <tr th:if="${courses.empty}">
+                <td colspan="4">No data</td>
+            </tr>
+        </table>
+        </div>
+        <div class="form">
             <h1>Редактирование профиля</h1>
             <img th:src="@{/profile/avatar/{id}(id = ${user.id})}" alt="User profile" class="full_avatar">
             <hr>
@@ -21,19 +42,21 @@
             <form th:method="post" th:action="@{/profile/avatar/{id}(id = ${user.id})}" enctype="multipart/form-data">
                 <label for="avatar">Выберите аватар для загрузки</label>
                 <input id="avatar" name="avatar" type="file"/>
-            <button type="submit" class="formButton">Обновить</button>
+                <button type="submit" class="formButton">Обновить</button>
             </form>
 
             <hr>
             <form th:object="${user}" th:method="post" th:action="@{/profile}">
-                <input type="hidden" th:field="*{id}">
-
                 <label for="name"><b>Изменить логин</b></label>
                 <input type="text" placeholder="Введите логин" th:field="*{username}" name="name" id="name">
                 <div>
                     <small class="validation-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
                         логин должен быть заполнен</small>
                 </div>
+                <div>
+                    <small class="validation-error" th:if="${usernameError != null}" th:text="${usernameError}"></small>
+                </div>
+
 
                 <label for="password"><b>Пароль</b></label>
                 <input type="password" placeholder="Введите пароль" id="password" th:field="*{password}">
@@ -41,16 +64,27 @@
                     <small class="validation-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
                         пароль должен быть заполнен и подоходить требованиям</small>
                 </div>
+                <label for="confirmPassword"><b>Повторите Пароль</b></label>
+                <input type="password" placeholder="Повторите пароль" id="confirmPassword"
+                       th:field="*{confirmPassword}">
+                <div>
+                    <small class="validation-error" th:if="${confirmPasswordError != null}"
+                           th:text="${confirmPasswordError}"></small>
+                </div>
+
                 <label for="email"><b>Email</b></label>
                 <input type="email" placeholder="Введите email" id="email" th:field="*{email}">
                 <div>
-                    <small class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-                        email должен быть заполнен и подоходить требованиям</small>
+                    <small class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                </div>
+                <div>
+                    <small class="validation-error" th:if="${emailError != null}" th:text="${emailError}"></small>
                 </div>
                 <hr>
                 <button type="submit" class="formButton">Сохранить</button>
             </form>
         </div>
+
 
     </div>
 </div>

@@ -22,6 +22,9 @@
             <div sec:authorize="hasRole('STUDENT')">
                 <h2 th:text="${lesson.title}"></h2>
                 <p th:text="${lesson.text}"></p>
+                <form th:method="post" th:action="@{/lesson/{lessonId}/complete (lessonId = ${lesson.id})}">
+                    <button th:hidden="${notEnrolled == true}" type="submit" class="formButton" style="float:right">Пройти тему</button>
+                </form>
             </div>
             <form sec:authorize="hasRole('ADMIN')" th:object="${lesson}" th:method="post" th:action="@{/lesson}">
                 <input type="hidden" th:field="*{id}">

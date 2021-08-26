@@ -4,6 +4,7 @@ import com.Turbo.Lms.Exceptions.InternalServerError;
 import com.Turbo.Lms.Exceptions.NotFoundException;
 import com.Turbo.Lms.domain.Course;
 import com.Turbo.Lms.dto.CourseDto;
+import com.Turbo.Lms.dto.LessonDtoWithCompletion;
 import com.Turbo.Lms.dto.UserDto;
 import com.Turbo.Lms.service.*;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -37,14 +40,16 @@ public class CourseController {
     private final UserService userService;
     private final LessonService lessonService;
     private final CourseAvatarStorageService courseAvatarStorageService;
+    private final LessonCompletionService lessonCompletionService;
 
     @Autowired
     public CourseController(CourseService courseService, UserService userService, LessonService lessonService,
-                            CourseAvatarStorageService courseAvatarStorageService) {
+                            CourseAvatarStorageService courseAvatarStorageService, LessonCompletionService lessonCompletionService) {
         this.courseService = courseService;
         this.userService = userService;
         this.lessonService = lessonService;
         this.courseAvatarStorageService = courseAvatarStorageService;
+        this.lessonCompletionService = lessonCompletionService;
     }
 
     @GetMapping()
@@ -85,12 +90,23 @@ public class CourseController {
         return "find_course";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping("/{courseId}")
-    public String courseForm(Model model, @PathVariable("courseId") Long courseId) {
+    public String courseForm(Model model, @PathVariable("courseId") Long courseId, HttpServletRequest request) {
         CourseDto course = courseService.findById(courseId);
+        UserDto userDto = userService.findUserByUsername(request.getRemoteUser());
+        var lessons = lessonService.findAllForLessonIdWithoutText(courseId);
+        boolean completed;
+        List<LessonDtoWithCompletion> lessonsWithCompletions = new ArrayList<>();
+        for (var lesson : lessons) {
+            completed = lessonCompletionService.isLessonAlreadyCompletedByUser(lesson.getId(), userDto.getId());
+            lessonsWithCompletions.add(new LessonDtoWithCompletion(lesson, completed));
+        }
         model.addAttribute("course", course);
-        model.addAttribute("lessons", lessonService.findAllForLessonIdWithoutText(courseId));
+        model.addAttribute("lessons", lessonsWithCompletions);
         model.addAttribute("users", userService.getUsersOfCourse(courseId));
+        model.addAttribute("user", userDto);
+        model.addAttribute("isEnrolled", userService.isEnrolled(userDto.getId(), courseId));
         return "form_course";
     }
 
@@ -114,6 +130,10 @@ public class CourseController {
     @Secured(RoleType.ADMIN)
     @DeleteMapping("/{courseId}")
     public String deleteCourse(@PathVariable("courseId") Long id) {
+        var lessonsList = lessonService.findAllForLessonIdWithoutText(id);
+        for (var lesson : lessonsList) {
+            lessonCompletionService.deleteByLessonId(lesson.getId());
+        }
         courseService.delete(courseService.findById(id));
         return "redirect:/course";
     }

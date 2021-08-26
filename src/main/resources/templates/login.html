@@ -13,8 +13,8 @@
 
 	<div id="wrapper">
 		<div id="featured-wrapper">
+			<div class="form">
 			<form action="login" th:action="@{/login}" name="f" method="post">
-				<div class="form">
 					<h1>Войти в аккаунт</h1>
 					<p>Пожалуйста, заполните поля, чтобы войти</p>
 					<hr>
@@ -32,12 +32,12 @@
 					<input type="password" placeholder="Введите Password" name="password" required>
 					<hr>
 					<button name="submit" type="submit" class="formButton">Войти</button>
-				</div>
 			</form>
 
-				<div class="container signin">
-					<p>Ещё нет аккаунта? <a href="registration.html">зарегистрироваться</a>.</p>
+				<div class="signin">
+					<p>Ещё нет аккаунта? <a th:href="@{/registration}">зарегистрироваться</a>.</p>
 				</div>
+			</div>
 		</div>
 	</div>
 	<div id="copyright" class="container">

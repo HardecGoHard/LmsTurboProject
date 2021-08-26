@@ -25,7 +25,7 @@
                         </form>
                     </li>
                     <li sec:authorize="!isAuthenticated()">
-                        <a th:href="@{user/registration}">Зарегистрироваться</a>
+                        <a th:href="@{/registration}">Зарегистрироваться</a>
                     </li>
                     <li sec:authorize="!isAuthenticated()">
                         <a th:href="@{/login}">Войти</a>
