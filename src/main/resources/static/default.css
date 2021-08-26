@@ -399,7 +399,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, #se
     font-size: 2em;
 }
 
-#featured-wrapper .fa {
+#featured-wrapper.fa {
     display: inline-block;
     margin-bottom: 1em;
     width: 3em;
@@ -520,6 +520,12 @@ a {
     border-radius: 5px;
     font-size: 22px;
     color: black;
+}
+.success {
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 28px;
+    color: #f2960b;
 }
 
 .full_avatar {

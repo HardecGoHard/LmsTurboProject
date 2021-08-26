@@ -1,5 +1,6 @@
 package com.Turbo.Lms.controller;
 
+import com.Turbo.Lms.domain.User;
 import com.Turbo.Lms.dto.CourseDto;
 import com.Turbo.Lms.dto.UserDto;
 import com.Turbo.Lms.service.*;
@@ -69,9 +70,13 @@ public class CourseControllerTest {
     @Test
     void courseForm_Should_Return_True() throws Exception {
         CourseDto courseDto = new CourseDto(1L);
+        UserDto user = new UserDto(1L);
+        user.setUsername("user");
         Mockito.when(courseService.findById(courseDto.getId())).thenReturn(courseDto);
         Mockito.when(lessonService.findAllForLessonIdWithoutText(1L)).thenReturn(Collections.emptyList());
         Mockito.when(userService.getUsersOfCourse(1L)).thenReturn(Collections.emptyList());
+        Mockito.when(userService.findUserByUsername(user.getUsername())).thenReturn(user);
+        Mockito.when(userService.isEnrolled(user.getId(), courseDto.getId())).thenReturn(true);
         this.mockMvc.perform(
                 get("/course/{id}", 1L))
                 .andExpect(status().isOk())

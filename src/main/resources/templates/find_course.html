@@ -6,6 +6,7 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"/>
     <link th:href="@{../default.css}" rel="stylesheet">
 
 </head>
@@ -25,9 +26,40 @@
             <hr>
             <table class="table-form">
                 <tr>
-                    <th>id</th>
-                    <th>Название</th>
-                    <th>Автор</th>
+                    <th>
+                        <th:block th:if="${sortField == 'id'}">
+                            <a th:href="${isAscending} == true ? @{/course/?sort=id,desc} : @{/course/?sort=id,asc}">
+                                <i th:class="${isAscending} == true ? ${'fa fa-sort-up'} : ${'fa fa-sort-down'}"
+                                   aria-hidden="true"></i>
+                                id</a>
+                        </th:block>
+                        <th:block th:unless="${sortField == 'id'}">
+                            <a th:href="@{/course/?sort=id,asc}"><i class="fa fa-sort" aria-hidden="true"></i> id</a>
+                        </th:block>
+                    </th>
+                    <th>
+                        <th:block th:if="${sortField == 'title'}">
+                            <a th:href="${isAscending} == true ? @{/course/?sort=title,desc} : @{/course/?sort=title,asc}">
+                                <i th:class="${isAscending} == true ? ${'fa fa-sort-up'} : ${'fa fa-sort-down'}"
+                                   aria-hidden="true"></i>
+                                Название</a>
+                        </th:block>
+                        <th:block th:unless="${sortField == 'title'}">
+                            <a th:href="@{/course/?sort=title,asc}"><i class="fa fa-sort" aria-hidden="true"></i>
+                                Название</a>
+                        </th:block>
+                    </th>
+                    <th>
+                        <th:block th:if="${sortField == 'author'}">
+                            <a th:href="${isAscending} == true ? @{/course/?sort=author,desc} : @{/course/?sort=author,asc}">
+                                <i th:class="${isAscending} == true ? ${'fa fa-sort-up'} : ${'fa fa-sort-down'}"
+                                   aria-hidden="true"></i>
+                                Автор</a>
+                        </th:block>
+                        <th:block th:unless="${sortField == 'author'}">
+                            <a th:href="@{/course/?sort=author,asc}"><i class="fa fa-sort" aria-hidden="true"></i> Автор</a>
+                        </th:block>
+                    </th>
                     <th sec:authorize="hasRole('STUDENT')">Изучить</th>
                     <th sec:authorize="hasRole('ADMIN')">Назначить</th>
                     <th sec:authorize="hasRole('ADMIN')">Удалить</th>
@@ -66,7 +98,7 @@
                     <ul class="pagination" th:each="pageNumber : ${pageNumbers}">
                         <li class="page-item">
                             <th:block th:if="${courses.getNumber() != (pageNumber - 1)}">
-                                <a class="page-link" th:href="@{/course(page=${pageNumber - 1})}"
+                                <a class="page-link" th:href="@{/course(page=${pageNumber - 1},sort=${sortString})}"
                                    th:text="${pageNumber}">1</a>
                             </th:block>
                             <th:block th:if="${courses.getNumber() == (pageNumber - 1)}">

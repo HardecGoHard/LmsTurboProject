@@ -1,6 +1,7 @@
 package com.Turbo.Lms.service;
 
 import com.Turbo.Lms.Exceptions.NotFoundException;
+import com.Turbo.Lms.dao.PasswordResetTokenRepository;
 import com.Turbo.Lms.dao.RoleRepositorty;
 import com.Turbo.Lms.dao.UserRepository;
 import com.Turbo.Lms.domain.Role;
@@ -27,17 +28,18 @@ public class UserServiceTest {
     private static UserRepository userRepositoryMock;
     private static PasswordEncoder passwordEncoderMock;
     private static RoleRepositorty roleRepositortyMock;
+    private static PasswordResetTokenRepository passwordResetTokenMock;
 
     private static final Role ROLE_ADMIN = new Role("ROLE_ADMIN");
     private static final Role ROLE_STUDENT = new Role("ROLE_STUDENT");
-    private static List<User> UserList;
+    private static List<User> userList;
 
 
     private static final Long INCORRECT_USER_ID = 1234567890L;
 
     @BeforeAll
     public static void setUp() {
-        UserList = List.of(
+        userList = List.of(
                 new User(
                         1L,
                         "NAME1",
@@ -55,16 +57,17 @@ public class UserServiceTest {
         passwordEncoderMock = Mockito.mock(PasswordEncoder.class);
         userRepositoryMock = Mockito.mock(UserRepository.class);
         roleRepositortyMock = Mockito.mock(RoleRepositorty.class);
+        passwordResetTokenMock = Mockito.mock(PasswordResetTokenRepository.class);
         Mockito.when(passwordEncoderMock.encode(anyString())).thenReturn("hash");
 
         userMapper = new UserMapper(passwordEncoderMock);
 
-        service = new UserService(userRepositoryMock, userMapper, roleRepositortyMock);
+        service = new UserService(userRepositoryMock, userMapper, roleRepositortyMock, passwordEncoderMock, passwordResetTokenMock);
     }
 
     @Test
     public void findAll_Should_Return_True() {
-        Mockito.when(userRepositoryMock.findAll()).thenReturn(UserList);
+        Mockito.when(userRepositoryMock.findAll()).thenReturn(userList);
 
         List<UserDto> allUser = userMapper.convertToDtoList(userRepositoryMock.findAll());
         assertThat(service.findAll()).isEqualTo(allUser);
@@ -72,7 +75,7 @@ public class UserServiceTest {
 
     @Test
     public void findAll_Should_Return_False() {
-        Mockito.when(userRepositoryMock.findAll()).thenReturn(UserList);
+        Mockito.when(userRepositoryMock.findAll()).thenReturn(userList);
         List<UserDto> allUser = userMapper.convertToDtoList(userRepositoryMock.findAll());
         allUser.get(0).setUsername("weqeqweqeqee");
 
@@ -81,7 +84,7 @@ public class UserServiceTest {
 
     @Test
     public void findById_Should_Return_True() {
-        Mockito.when(userRepositoryMock.findById(1L)).thenReturn(Optional.ofNullable(UserList.get(0)));
+        Mockito.when(userRepositoryMock.findById(1L)).thenReturn(Optional.ofNullable(userList.get(0)));
         UserDto user = userMapper.toUserDto(userRepositoryMock.findById(1L).get());
 
         assertThat(service.findById(1L)).isEqualTo(user);
@@ -103,8 +106,10 @@ public class UserServiceTest {
 
     @Test
     public void delete_Should_Return_True() {
-        service.delete(userMapper.toUserDto(UserList.get(1)));
-        Mockito.verify(userRepositoryMock, Mockito.times(1)).delete(UserList.get(1));
+        Mockito.when(userRepositoryMock.findById(userList.get(0).getId()))
+                .thenReturn(Optional.ofNullable(userList.get(1)));
+        service.delete(userMapper.toUserDto(userList.get(0)));
+        Mockito.verify(userRepositoryMock, Mockito.times(1)).delete(userList.get(1));
     }
 
     @Test

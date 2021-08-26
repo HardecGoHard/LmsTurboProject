@@ -4,9 +4,9 @@
 	<title>Редактирование профиля</title>
 	<meta name="keywords" content="">
 	<meta name="description" content="">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"/>
 	<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
 	<link th:href="@{default.css}" rel="stylesheet">
-
 </head>
 <body>
 <header th:replace="fragments/header :: header"></header>
@@ -23,19 +23,22 @@
 					</div>
 
 					<label for="username"><b>username</b></label>
-					<input type="text" placeholder="Введите username" name="username" required>
+					<input type="text" placeholder="Введите username" name="username" id="username" required>
 					<div th:if="${param.error}" class="validation-error">
 						Invalid username and password.
 					</div>
 
 					<label for="password"><b>Пароль</b></label>
-					<input type="password" placeholder="Введите Password" name="password" required>
+					<input type="password" placeholder="Введите Password" name="password" id="password" required>
 					<hr>
 					<button name="submit" type="submit" class="formButton">Войти</button>
 			</form>
 
 				<div class="signin">
 					<p>Ещё нет аккаунта? <a th:href="@{/registration}">зарегистрироваться</a>.</p>
+				</div>
+				<div class="signin">
+					<p><a th:href="@{/login/resetPassword}">Забыли пароль?</a>.</p>
 				</div>
 			</div>
 		</div>
