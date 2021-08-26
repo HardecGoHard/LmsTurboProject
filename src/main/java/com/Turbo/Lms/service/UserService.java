@@ -95,6 +95,9 @@ public class UserService {
     }
 
     public void createPasswordResetTokenForUser(UserDto userDto, String token) {
+        /* Если для пользователя уже есть токен для восстановления,
+         то удаляем старый и помещаем на его место новый
+         */
         if (passwordTokenRepository.findByUser_Id(userDto.getId()) != null){
             passwordTokenRepository.deleteByUser_Id(userDto.getId());
         }

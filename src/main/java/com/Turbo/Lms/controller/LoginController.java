@@ -68,12 +68,13 @@ public class LoginController {
 
     private String constructResetTokenEmail(String contextPath, String token, UserDto user) {
         String text = "Для сброса пароля перейдите по ссылке: \n";
-        return text + contextPath + "/login/changePassword?token=" + token;
+        return text + "http://" + contextPath + "/login/changePassword?token=" + token;
     }
+
     @GetMapping("/changePassword")
     public String showChangePasswordPage(@RequestParam("token") String token, Model model) {
         String result = userService.validatePasswordResetToken(token);
-        if(result != null) {
+        if (result != null) {
             model.addAttribute("tokenError", "Ваш токен невалидный, повторите сброс пароля!");
             return "change_password";
         } else {
@@ -83,19 +84,20 @@ public class LoginController {
             return "change_password";
         }
     }
+
     @PostMapping("/changePassword")
     public String savePassword(@Valid @ModelAttribute("password") PasswordDto passwordDto, Model model) {
-        if (!passwordDto.getNewPassword().equals(passwordDto.getConfirmNewPassword())){
+        if (!passwordDto.getNewPassword().equals(passwordDto.getConfirmNewPassword())) {
             model.addAttribute("passwordError", "Пароли не совпадают");
             return "change_password";
         }
         String result = userService.validatePasswordResetToken(passwordDto.getToken());
-        if(result != null) {
+        if (result != null) {
             model.addAttribute("tokenError", "Ваш токен невалидный, повторите сброс пароля!");
             return "change_password";
         }
         UserDto user = userService.findUserByPasswordResetToken(passwordDto.getToken());
-        if(user != null) {
+        if (user != null) {
             userService.changeUserPassword(user.getId(), passwordDto.getNewPassword());
             return "redirect:/login";
         } else {

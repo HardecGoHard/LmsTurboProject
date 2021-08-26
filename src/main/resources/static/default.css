@@ -523,10 +523,9 @@ a {
 }
 .success {
     padding: 5px;
-    background-color: rgb(56, 252, 25);
     border-radius: 5px;
-    font-size: 32px;
-    color: black;
+    font-size: 28px;
+    color: #f2960b;
 }
 
 .full_avatar {
