@@ -9,16 +9,20 @@ import com.Turbo.Lms.domain.Lesson;
 import com.Turbo.Lms.dto.LessonDto;
 import com.Turbo.Lms.util.mapper.LessonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "lessonCache")
 public class LessonService {
     private final LessonRepository lessonRepository;
     private final LessonMapper lessonMapper;
-    private CourseRepository courseRepository;
+    private final CourseRepository courseRepository;
 
 
     @Autowired
@@ -28,11 +32,13 @@ public class LessonService {
         this.courseRepository = courseRepository;
     }
 
+    @Cacheable(cacheNames = "lesson", key = "#id", unless = "#result == null")
     public LessonDto findById(Long id) {
         Lesson lesson = findLessonById(id);
         return lessonMapper.toLessonDto(lesson);
     }
 
+    @CacheEvict(cacheNames = "lessons", allEntries = true)
     public void save(LessonDto lessonDto) {
         Lesson lesson = lessonMapper.toLessonFromDto(lessonDto);
         Course course = courseRepository.findById((lessonDto.getCourseId())).get();
