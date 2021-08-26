@@ -521,6 +521,12 @@ a {
     font-size: 22px;
     color: black;
 }
+.success {
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 28px;
+    color: #f2960b;
+}
 
 .full_avatar {
     width: 200px;
