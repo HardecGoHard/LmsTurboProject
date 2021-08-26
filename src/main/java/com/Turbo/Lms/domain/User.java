@@ -32,6 +32,9 @@ public class User {
     private List<TaskCompletion> taskCompletionList;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private PasswordResetToken passwordResetToken;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private UserAvatarImage userAvatarImage;
 
     public User(Long id, String username, String password,String email, Set<Role> roles) {
@@ -106,6 +109,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public PasswordResetToken getPasswordResetToken() {
+        return passwordResetToken;
+    }
+
+    public void setPasswordResetToken(PasswordResetToken passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
     }
 
     @Override

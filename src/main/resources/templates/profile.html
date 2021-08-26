@@ -5,8 +5,8 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"/>
     <link th:href="@{../../default.css}" rel="stylesheet">
-
 </head>
 <body>
 <header th:replace="fragments/header :: header"></header>
@@ -28,9 +28,6 @@
                     <a th:text="${course.title}" th:href="@{/course/{id}(id = ${course.id})}"></a>
                 </td>
                 <td th:text="${course.author}"></td>
-            </tr>
-            <tr th:if="${courses.empty}">
-                <td colspan="4">No data</td>
             </tr>
         </table>
         </div>

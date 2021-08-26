@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -79,6 +81,15 @@ public class CourseController {
                     .collect(Collectors.toList());
             model.addAttribute("pageNumbers", pageNumbers);
         }
+        Sort sort = pageable.getSort();
+        if (sort.isSorted()) {
+            Sort.Order order = sort.stream().filter(Objects::nonNull).findFirst()
+                    .orElseThrow(() -> new NotFoundException("Что-то пошло не так"));
+            model.addAttribute("sortField", order.getProperty());
+            model.addAttribute("isAscending", order.isAscending());
+            model.addAttribute("sortString",
+                    String.format("%s,%s", order.getProperty(), order.isAscending() ? "asc" : "desc"));
+        }
         return "find_course";
     }
 
@@ -108,7 +119,9 @@ public class CourseController {
         model.addAttribute("lessons", lessonsWithCompletions);
         model.addAttribute("users", userService.getUsersOfCourse(courseId));
         model.addAttribute("user", userDto);
-        model.addAttribute("isEnrolled", userService.isEnrolled(userDto.getId(), courseId));
+        if (userDto != null) {
+            model.addAttribute("isEnrolled", userService.isEnrolled(userDto.getId(), courseId));
+        }
         return "form_course";
     }
 

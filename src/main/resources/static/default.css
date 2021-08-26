@@ -279,7 +279,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, #se
 
 #header-featured {
     padding: 10em 0em;
-    background-image: url(../images/banner.jpg);
+    background-image: url(images/banner.jpg);
     background-position: center;
     background-size: cover;
 }
@@ -399,7 +399,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, #se
     font-size: 2em;
 }
 
-#featured-wrapper .fa {
+#featured-wrapper.fa {
     display: inline-block;
     margin-bottom: 1em;
     width: 3em;
@@ -412,13 +412,13 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, #se
 }
 
 #featured-wrapper .mentor {
-    background-image: url(../images/mentor.png);
+    background-image: url(images/mentor.png);
     background-repeat: no-repeat;
     background-position: center;
 }
 
 #featured-wrapper .effect {
-    background-image: url(../images/efficiency.png);
+    background-image: url(images/efficiency.png);
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -520,6 +520,12 @@ a {
     border-radius: 5px;
     font-size: 22px;
     color: black;
+}
+.success {
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 28px;
+    color: #f2960b;
 }
 
 .full_avatar {

@@ -7,28 +7,29 @@
     <meta name="description" content="">
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
     <link th:href="@{../default.css}" rel="stylesheet">
-
 </head>
 <body>
 <header th:replace="fragments/header :: header"></header>
 <div id="wrapper">
     <div id="featured-wrapper">
         <div class="form">
-                <h1 th:text="${course.title}"></h1>
-                <h4 sec:authorize="hasRole('STUDENT')" th:text="${course.author}"></h4>
-                <form  sec:authorize="hasRole('STUDENT')" th:method="post" th:action="@{/course/{id}/assign (id = ${course.id}, userId = ${user.id})}">
-                    <button th:hidden="${isEnrolled}" type="submit" class="TableButton">Записаться на курс</button>
-                </form>
-
-            <img th:src="@{/course/{id}/avatar(id = ${course.id})}" alt="Course profile" class="full_avatar">
-            <hr>
-
-            <form th:hidden="${newCourse == true}" th:method="post" th:action="@{/course/{id}/avatar(id = ${course.id})}" sec:authorize="hasRole('ADMIN')" enctype="multipart/form-data">
-                <label for="avatar">Выберите обложку курса для загрузки</label>
-                <input id="avatar" name="avatar" type="file"/>
-                <button type="submit" class="formButton">Обновить</button>
+            <h1 th:text="${course.title}"></h1>
+            <h4 sec:authorize="hasRole('STUDENT')" th:text="${course.author}"></h4>
+            <form sec:authorize="hasRole('STUDENT')" th:method="post"
+                  th:action="@{/course/{id}/assign (id = ${course.id}, userId = ${user.id})}">
+                <button th:hidden="${isEnrolled}" type="submit" class="TableButton">Записаться на курс</button>
             </form>
+            <th:block th:if="${course.id != null}">
+                <img th:src="@{/course/{id}/avatar(id = ${course.id})}" alt="Course profile" class="full_avatar">
+                <hr>
 
+                <form th:method="post" th:action="@{/course/{id}/avatar(id = ${course.id})}"
+                      sec:authorize="hasRole('ADMIN')" enctype="multipart/form-data">
+                    <label for="avatar">Выберите обложку курса для загрузки</label>
+                    <input id="avatar" name="avatar" type="file"/>
+                    <button type="submit" class="formButton">Обновить</button>
+                </form>
+            </th:block>
             <form sec:authorize="hasRole('ADMIN')" th:object="${course}" th:method="post" th:action="@{/course}">
                 <input type="hidden" th:field="*{id}">
                 <label for="course-name"><b>Название курса</b></label>
@@ -46,6 +47,7 @@
                 <button type="submit" class="formButton">Сохранить</button>
                 <hr>
             </form>
+            <th:block th:if="${course.id != null}">
                 <label><b>Список уроков курса:</b></label>
             <table class="table-form">
                 <tr>
@@ -60,7 +62,7 @@
                     </td>
                         <td sec:authorize="hasRole('ADMIN')">
                             <form th:method="delete" th:action="@{/lesson/{id}(id = ${lesson.id})}">
-                            <button type="submit" class="TableButton">Удалить</button>
+                                <button type="submit" class="TableButton">Удалить</button>
                             </form>
                         </td>
                 </tr>
@@ -92,25 +94,26 @@
                 </form>
             </table>
 
-            <label sec:authorize="hasRole('ADMIN')" for=><b>Пользователи связанные с этим курсом</b></label>
-            <table sec:authorize="hasRole('ADMIN')" class="table-form">
-                <tr>
-                    <th>id</th>
-                    <th>Имя Пользователя</th>
-                    <th>Действие</th>
-                </tr>
-                <tr th:each="user : ${users}">
-                    <td th:text="${user.id}"></td>
-                    <td th:text="${user.username}"></td>
-                    <td>
-                        <form th:method="delete" th:action="@{/course/{courseId}/unsign (courseId = ${course.id})}">
-                            <button name="userId" th:value="${user.id}" type="submit" class="TableButton">Снять с
-                                курса
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            </table>
+                <label sec:authorize="hasRole('ADMIN')" for=><b>Пользователи связанные с этим курсом</b></label>
+                <table sec:authorize="hasRole('ADMIN')" class="table-form">
+                    <tr>
+                        <th>id</th>
+                        <th>Имя Пользователя</th>
+                        <th>Действие</th>
+                    </tr>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.username}"></td>
+                        <td>
+                            <form th:method="delete" th:action="@{/course/{courseId}/unsign (courseId = ${course.id})}">
+                                <button name="userId" th:value="${user.id}" type="submit" class="TableButton">Снять с
+                                    курса
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </th:block>
         </div>
     </div>
 

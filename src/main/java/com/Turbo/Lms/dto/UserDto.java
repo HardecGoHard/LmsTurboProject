@@ -15,7 +15,7 @@ public class UserDto {
     @Size(min = 4, max = 25, message = "Длина должна быть от 4 до 25")
     @NotBlank(message = "Имя пользователя должно быть заполнено")
     private String username;
-    @Size(min = 8, message = "Длина пароля должна быть от 4 до 25")
+    @Size(min = 8, message = "Длина пароля должна быть от 8 до 25")
     @NotBlank(message = "Пароль должен быть заполнен")
     private String password;
 
