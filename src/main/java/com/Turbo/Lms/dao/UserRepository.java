@@ -1,5 +1,6 @@
 package com.Turbo.Lms.dao;
 
+import com.Turbo.Lms.domain.PasswordResetToken;
 import com.Turbo.Lms.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
