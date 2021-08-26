@@ -21,6 +21,9 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Lesson> lessons;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Task> tasks;
+
     @ManyToMany
     private Set<User> users;
 

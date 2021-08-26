@@ -23,7 +23,7 @@
             <img th:src="@{/course/{id}/avatar(id = ${course.id})}" alt="Course profile" class="full_avatar">
             <hr>
 
-            <form th:method="post" th:action="@{/course/{id}/avatar(id = ${course.id})}" sec:authorize="hasRole('ADMIN')" enctype="multipart/form-data">
+            <form th:hidden="${newCourse == true}" th:method="post" th:action="@{/course/{id}/avatar(id = ${course.id})}" sec:authorize="hasRole('ADMIN')" enctype="multipart/form-data">
                 <label for="avatar">Выберите обложку курса для загрузки</label>
                 <input id="avatar" name="avatar" type="file"/>
                 <button type="submit" class="formButton">Обновить</button>
@@ -53,7 +53,7 @@
                     <td>Название</td>
                     <td sec:authorize="hasRole('ADMIN')">Действие</td>
                 </tr>
-                <tr th:each="lesson : ${lessons}" th:style="${lesson.completion} ? 'background:green' : 'background:white'">
+                <tr th:each="lesson : ${lessons}" th:style="${lesson.completion} ? 'background:lightgreen' : 'background:white'">
                     <td th:text="${lesson.id}"></td>
                     <td>
                         <a th:text="${lesson.title}" th:href="@{/lesson/{id}(id = ${lesson.id})}"></a>
@@ -64,9 +64,31 @@
                             </form>
                         </td>
                 </tr>
-                <form sec:authorize="hasRole('ADMIN')">
-                    <label><b><a name="course_id" th:href="@{../lesson/new(courseId = ${course.id})}">Новый
+                <form sec:authorize="hasRole('ADMIN')" >
+                    <label th:hidden="${newCourse == true}"><b><a name="course_id" th:href="@{../lesson/new(courseId = ${course.id})}">Новый
                         урок</a></b></label>
+                </form>
+
+                <table class="table-form">
+                    <tr>
+                        <td>id</td>
+                        <td>Название</td>
+                        <td sec:authorize="hasRole('ADMIN')">Действие</td>
+                    </tr>
+                    <tr th:each="task : ${tasks}" th:style="${task.completion} ? 'background:lightgreen' : 'background:white'">
+                        <td th:text="${task.id}"></td>
+                        <td>
+                            <a th:text="${task.name}" th:href="@{/task/{id}(id = ${task.id})}"></a>
+                        </td>
+                        <td sec:authorize="hasRole('ADMIN')">
+                            <form th:method="delete" th:action="@{/task/{id}(id = ${task.id}, courseId = ${course.id})}">
+                                <button type="submit" class="TableButton">Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
+                <form>
+                    <label><b>Список Заданий курса:</b></label>
+                    <label  sec:authorize="hasRole('ADMIN')" th:hidden="${newCourse == true}"><b><a name="course_id" th:href="@{/task/new(courseId = ${course.id})}"> Новое задание</a></b></label>
                 </form>
             </table>
 

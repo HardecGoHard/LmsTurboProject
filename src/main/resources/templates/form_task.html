@@ -1,0 +1,43 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Задание</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link th:href="@{../default.css}" rel="stylesheet">
+
+</head>
+
+<body>
+<header th:replace="fragments/header :: header"></header>
+<div id="wrapper">
+    <div id="featured-wrapper">
+        <div class="form">
+            <form sec:authorize="hasRole('STUDENT')" th:object="${task}" th:method="post"
+                  th:action="@{/task/{taskId}/complete (taskId = ${task.id})}">
+                <input type="hidden" th:field="*{courseId}">
+                <input type="hidden" th:field="*{id}">
+                <h1><b>Название Задания</b></h1>
+                <h2  th:text="*{name}" id="task-name"></h2><br><br>
+                <h1><b>Вопрос</b></h1>
+                <p th:text="*{question}" id="task-question"></p><br><br>
+                <h1>Варианты ответов</h1><br><br>
+                <div th:object="${answers}">
+                    <div th:each="answerDto, itemStat : *{answerDtoList}">
+
+                        <h2 th:text="*{answerDtoList[__${itemStat.index}__].text}" required="required"></h2>
+                        <input type="radio" name="chosen_answer" th:value="${itemStat.index}" required="required">
+                    </div>
+                </div>
+                <br><br><br>
+                <label>Осталось попыток: </label>
+                <p th:text="${attemptsRemained}"></p>
+                <button th:hidden="${isCompleted || attemptsLimitExceeded || NotEnrolled}" type="submit" class="formButton">Завершить</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
