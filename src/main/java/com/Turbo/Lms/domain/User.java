@@ -1,6 +1,7 @@
 package com.Turbo.Lms.domain;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,6 +27,9 @@ public class User {
 
     @ManyToMany()
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<TaskCompletion> taskCompletionList;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private PasswordResetToken passwordResetToken;

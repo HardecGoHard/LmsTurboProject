@@ -16,7 +16,7 @@
         <div class="form">
             <h1>Профиль</h1>
 
-            <form th:object="${user}" th:method="post" th:action="@{/profile/avatar/{id}(id = ${user.id})}" enctype="multipart/form-data">
+            <form th:hidden="${newUser == true}" th:object="${user}" th:method="post" th:action="@{/profile/avatar/{id}(id = ${user.id})}" enctype="multipart/form-data">
                 <img th:src="@{/profile/avatar/{id}(id = ${user.id})}" alt="User profile" class="full_avatar">
                 <hr>
 

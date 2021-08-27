@@ -1,0 +1,60 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Задание</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link th:href="@{../default.css}" rel="stylesheet">
+
+</head>
+
+<body>
+<header th:replace="fragments/header :: header"></header>
+<div id="wrapper">
+    <div id="featured-wrapper">
+        <div class="form">
+            <form sec:authorize="hasRole('ADMIN')" th:object="${task}" th:method="post" th:action="@{/task}">
+                <input type="hidden" th:field="*{courseId}">
+                <input type="hidden" th:field="*{id}">
+                <label for="task-name"><b>Название Задания</b></label>
+                <input type="text" th:field="*{name}" id="task-name">
+                <div>
+                    <small class="validation-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Поле
+                        названия задания должно быть заполнено</small>
+                </div>
+                <label for="task-question"><b>Вопрос</b></label>
+                <textarea id="task-question" rows="20" cols="30" th:field="*{question}"></textarea>
+                <div class="required">
+                    <small class="validation-error" th:if="${#fields.hasErrors('question')}" th:errors="*{question}">Вопрос
+                        должен быть заполнен</small>
+                </div>
+                <h1>Варианты ответов</h1>
+                <div th:object="${answers}">
+                <div th:each="answerDto, itemStat : *{answerDtoList}">
+                    <input type="hidden" th:field="*{answerDtoList[__${itemStat.index}__].id}">
+                    <input type="hidden" th:field="*{answerDtoList[__${itemStat.index}__].correct}">
+                    <input type="hidden" th:field="*{answerDtoList[__${itemStat.index}__].taskId}">
+                    <input type="text"  th:field="*{answerDtoList[__${itemStat.index}__].text}" required="required">
+                    <label>Правильный ответ</label>
+                    <input type="radio" name="answer" th:value="${itemStat.index}" required="required">
+                </div>
+                </div>
+                <label for="number-attempts">Количество попыток</label>
+                <input type="number" th:field="*{attempts}" id="number-attempts">
+                <div class="required">
+                    <small class="validation-error" th:if="${#fields.hasErrors('attempts')}" th:errors="*{attempts}">Количество
+                        попыток: с 1 до 3</small>
+                </div>
+                <button type="submit" class="formButton">Сохранить</button>
+                <hr>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="copyright" class="container">
+    <p>Turbo LMS.</p>
+</div>
+</body>
+</html>

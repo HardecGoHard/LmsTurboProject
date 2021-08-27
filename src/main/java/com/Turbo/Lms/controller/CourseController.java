@@ -3,9 +3,7 @@ package com.Turbo.Lms.controller;
 import com.Turbo.Lms.Exceptions.InternalServerError;
 import com.Turbo.Lms.Exceptions.NotFoundException;
 import com.Turbo.Lms.domain.Course;
-import com.Turbo.Lms.dto.CourseDto;
-import com.Turbo.Lms.dto.LessonDtoWithCompletion;
-import com.Turbo.Lms.dto.UserDto;
+import com.Turbo.Lms.dto.*;
 import com.Turbo.Lms.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,15 +39,20 @@ public class CourseController {
     private final LessonService lessonService;
     private final CourseAvatarStorageService courseAvatarStorageService;
     private final LessonCompletionService lessonCompletionService;
+    private final TaskService taskService;
+    private final TaskCompletionService taskCompletionService;
 
     @Autowired
     public CourseController(CourseService courseService, UserService userService, LessonService lessonService,
-                            CourseAvatarStorageService courseAvatarStorageService, LessonCompletionService lessonCompletionService) {
+                            CourseAvatarStorageService courseAvatarStorageService, LessonCompletionService lessonCompletionService,
+                            TaskService taskService, TaskCompletionService taskCompletionService) {
         this.courseService = courseService;
         this.userService = userService;
         this.lessonService = lessonService;
         this.courseAvatarStorageService = courseAvatarStorageService;
         this.lessonCompletionService = lessonCompletionService;
+        this.taskService = taskService;
+        this.taskCompletionService = taskCompletionService;
     }
 
     @GetMapping()
@@ -97,11 +100,21 @@ public class CourseController {
         UserDto userDto = userService.findUserByUsername(request.getRemoteUser());
         var lessons = lessonService.findAllForLessonIdWithoutText(courseId);
         boolean completed;
+        List<TaskDto> tasks = taskService.findByCourseId(courseId);
+
         List<LessonDtoWithCompletion> lessonsWithCompletions = new ArrayList<>();
         for (var lesson : lessons) {
             completed = lessonCompletionService.isLessonAlreadyCompletedByUser(lesson.getId(), userDto.getId());
             lessonsWithCompletions.add(new LessonDtoWithCompletion(lesson, completed));
         }
+
+        List<TaskDtoWithCompletion> taskDtoWithCompletions = new ArrayList<>();
+        for (var task: tasks) {
+            completed = taskCompletionService.isTaskAlreadyCompletedByUser(userDto.getId(), task.getId());
+            taskDtoWithCompletions.add(new TaskDtoWithCompletion(task, completed));
+        }
+
+        model.addAttribute("tasks", taskDtoWithCompletions);
         model.addAttribute("course", course);
         model.addAttribute("lessons", lessonsWithCompletions);
         model.addAttribute("users", userService.getUsersOfCourse(courseId));
@@ -126,6 +139,7 @@ public class CourseController {
     @GetMapping("/new")
     public String courseForm(Model model) {
         model.addAttribute("course", new Course());
+        model.addAttribute("newCourse", true);
         return "form_course";
     }
 

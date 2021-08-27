@@ -52,7 +52,9 @@ public class LessonController {
 
     @Secured(RoleType.STUDENT)
     @PostMapping("/{lessonId}/complete")
-    public String lessonCompletedForCurrentUser(@PathVariable("lessonId") long lessonId, HttpServletRequest request) {
+    public String lessonCompletedForCurrentUser(@PathVariable("lessonId") long lessonId, @RequestParam("notEnrolled") boolean notEnrolled, HttpServletRequest request) {
+        if (notEnrolled)
+            return "redirect:/access_denied";
         LessonDto lessonDto = lessonService.findById(lessonId);
         UserDto userDto = userService.findUserByUsername(request.getRemoteUser());
         if (!lessonCompletionService.isLessonAlreadyCompletedByUser(lessonId, userDto.getId())){
