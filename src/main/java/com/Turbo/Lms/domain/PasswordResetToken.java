@@ -1,9 +1,17 @@
 package com.Turbo.Lms.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "password_reset_token")
 public class PasswordResetToken {
@@ -20,43 +28,9 @@ public class PasswordResetToken {
     @Column
     private Date expiryDate;
 
-    public PasswordResetToken() {
-    }
-
     public PasswordResetToken(String token, User user, Date expiryDate) {
         this.token = token;
         this.user = user;
-        this.expiryDate = expiryDate;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
-    public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 

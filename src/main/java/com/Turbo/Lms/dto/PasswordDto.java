@@ -1,45 +1,25 @@
 package com.Turbo.Lms.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class PasswordDto {
     private  String token;
 
+    @Size(min = 8, message = "Длина пароля должна быть от 8 до 25")
+    @NotBlank(message = "Пароль должен быть заполнен")
     private String newPassword;
     private String confirmNewPassword;
-
-    public PasswordDto(String confirmNewPassword, String token, String newPassword) {
-        this.confirmNewPassword = confirmNewPassword;
-        this.token = token;
-        this.newPassword = newPassword;
-    }
-
-    public PasswordDto() {
-    }
-
-    public String getConfirmNewPassword() {
-        return confirmNewPassword;
-    }
-
-    public void setConfirmNewPassword(String confirmNewPassword) {
-        this.confirmNewPassword = confirmNewPassword;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
 
     @Override
     public boolean equals(Object o) {

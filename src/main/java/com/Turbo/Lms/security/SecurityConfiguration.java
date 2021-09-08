@@ -36,7 +36,7 @@ public class SecurityConfiguration {
             http.
                     authorizeRequests()
                         .antMatchers("/admin/**").hasRole("ADMIN")
-                        .antMatchers("/", "/default.css", "/registration", "/login/**").permitAll()
+                        .antMatchers("/", "/default.css", "/registration", "/login/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                     .and()
                         .formLogin()

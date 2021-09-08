@@ -36,7 +36,8 @@ public class ProfileController {
     private final UserAvatarStorageService userAvatarStorageService;
 
     @Autowired
-    public ProfileController(UserService userService, UserValidator userValidator, UserAvatarStorageService userAvatarStorageService,
+    public ProfileController(UserService userService, UserValidator userValidator,
+                             UserAvatarStorageService userAvatarStorageService,
                              CourseService courseService) {
         this.userService = userService;
         this.userValidator = userValidator;
@@ -76,7 +77,8 @@ public class ProfileController {
     @PostMapping("/avatar/{userId}")
     public String updateAvatarImage(@PathVariable("userId") Long userId,
                                     @RequestParam("avatar") MultipartFile avatar) {
-        logger.info("File name {}, file content type {}, file size {}", avatar.getOriginalFilename(), avatar.getContentType(), avatar.getSize());
+        logger.info("File name {}, file content type {}, file size {}", avatar.getOriginalFilename(),
+                avatar.getContentType(), avatar.getSize());
         try {
             userAvatarStorageService.save(userId, avatar.getContentType(), avatar.getInputStream());
         } catch (Exception ex) {

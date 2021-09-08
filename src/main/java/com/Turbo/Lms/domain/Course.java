@@ -1,10 +1,15 @@
 package com.Turbo.Lms.domain;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -27,64 +32,12 @@ public class Course {
     @ManyToMany
     private Set<User> users;
 
-
     @OneToOne(mappedBy = "course", cascade = CascadeType.ALL)
     private CourseAvatarImage courseAvatarImage;
-
-    public Course() {
-    }
-
     public Course(Long id, String author, String title) {
         this.id = id;
         this.author = author;
         this.title = title;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public List<Lesson> getLessons() {
-        return lessons;
-    }
-
-    public void setLessons(List<Lesson> lessons) {
-        this.lessons = lessons;
-    }
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
-    public CourseAvatarImage getCourseAvatarImage() {
-        return courseAvatarImage;
-    }
-
-    public void setCourseAvatarImage(CourseAvatarImage courseAvatarImage) {
-        this.courseAvatarImage = courseAvatarImage;
     }
 
     @Override

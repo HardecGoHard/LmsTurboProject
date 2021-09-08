@@ -76,13 +76,12 @@ public class LoginController {
         String result = userService.validatePasswordResetToken(token);
         if (result != null) {
             model.addAttribute("tokenError", "Ваш токен невалидный, повторите сброс пароля!");
-            return "change_password";
         } else {
             PasswordDto passwordDto = new PasswordDto();
             passwordDto.setToken(token);
             model.addAttribute("password", passwordDto);
-            return "change_password";
         }
+        return "change_password";
     }
 
     @PostMapping("/changePassword")

@@ -76,8 +76,10 @@ public class CourseControllerTest {
     @WithMockUser(username = "user", roles = RoleType.ADMIN_WITHOUT_PREFIX)
     @Test
     void courseForm_Should_Return_True() throws Exception {
-        CourseDto courseDto = new CourseDto(1L);
-        UserDto user = new UserDto(1L);
+        CourseDto courseDto = new CourseDto();
+        courseDto.setId(1L);
+        UserDto user = new UserDto();
+        user.setId(1L);
         user.setUsername("user");
         Mockito.when(courseService.findById(courseDto.getId())).thenReturn(courseDto);
         Mockito.when(lessonService.findAllForLessonIdWithoutText(1L)).thenReturn(Collections.emptyList());
@@ -144,7 +146,8 @@ public class CourseControllerTest {
     @WithMockUser(username = "user", roles = RoleType.ADMIN_WITHOUT_PREFIX)
     @Test
     void deleteCourse_Should_Return_True() throws Exception {
-        CourseDto courseDto = new CourseDto(1L);
+        CourseDto courseDto = new CourseDto();
+        courseDto.setId(1L);
         Mockito.when(courseService.findById(courseDto.getId())).thenReturn(courseDto);
         mockMvc.perform(delete("/course/{id}", 1L)
                 .with(csrf()))

@@ -51,7 +51,8 @@ public class CourseService {
     }
 
     public void delete(CourseDto courseDto) {
-        courseRepository.delete(courseRepository.findById(courseDto.getId()).orElseThrow(() -> new NotFoundException("Course not found!")));
+        courseRepository.delete(courseRepository.findById(courseDto.getId()).orElseThrow(()
+                -> new NotFoundException("Course not found!")));
     }
 
     public Page<CourseDto> findByTitleLike(String prefix, Pageable pageable) {
@@ -75,8 +76,10 @@ public class CourseService {
     }
 
     private void userToCourse(Long id, Long courseId, boolean isDelete) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        Course course = courseRepository.findById(courseId).get();
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course not found!"));
         if (isDelete) {
             user.getCourses().remove(course);
             course.getUsers().remove(user);

@@ -29,10 +29,6 @@ public class AnswerService {
         return answerMapper.convertToDtoList(answerRepository.getAnswerByTaskId(taskId));
     }
 
-    public Answer getById(Long answerId) {
-        return answerRepository.getById(answerId);
-    }
-
     public void save(AnswerDto answerDto) {
         Answer answer = answerMapper.toAnswerfromDto(answerDto);
         answer.setTask(taskRepository.getById(answerDto.getTaskId()));
